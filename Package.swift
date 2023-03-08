@@ -23,7 +23,10 @@ let package = Package(
         ),
         .testTarget(
             name: "ContributorUITests",
-            dependencies: ["ContributorUI"]
+            dependencies: ["ContributorUI"],
+            resources: [
+                .process("Resources"),
+            ]
         ),
     ],
     swiftLanguageVersions: [.v5]
