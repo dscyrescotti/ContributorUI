@@ -11,6 +11,7 @@ public struct ContributorCard: View {
     let configuration: Configuration
     
     @StateObject internal var viewModel: ContributorCardViewModel
+    @State internal var width: CGFloat = .zero
 
     init(configuration: Configuration, viewModel: StateObject<ContributorCardViewModel>) {
         self.configuration = configuration
@@ -18,20 +19,22 @@ public struct ContributorCard: View {
     }
 
     public var body: some View {
-        GeometryReader { proxy in
-            let columns = [GridItem](repeating: GridItem(.flexible(), spacing: configuration.spacing), count: 8)
-            let size = (proxy.size.width - configuration.spacing * 7) / 8
-            LazyVGrid(columns: columns, spacing: configuration.spacing) {
-                ForEach(viewModel.contributors) { contributor in
-                    AsyncImage(url: URL(string: contributor.avatarURL)) { image in
-                        image
-                            .resizable()
-                    } placeholder: {
-                        Color.black
-                    }
-                    .frame(width: size, height: size)
+        let columns = [GridItem](repeating: GridItem(.flexible(), spacing: configuration.spacing), count: configuration.countPerRow)
+        let size = max(0, (width - configuration.spacing * CGFloat(configuration.countPerRow - 1)) / CGFloat(configuration.countPerRow))
+        LazyVGrid(columns: columns, spacing: configuration.spacing) {
+            ForEach(viewModel.contributors) { contributor in
+                AsyncImage(url: URL(string: contributor.avatarURL)) { image in
+                    image
+                        .resizable()
+                } placeholder: {
+                    Color.black
                 }
+                .frame(width: size, height: size)
             }
+        }
+        .onChangeSize { size in
+            width = size.width
+            print(width)
         }
         .padding(configuration.padding)
         .background(configuration.backgroundStyle)
