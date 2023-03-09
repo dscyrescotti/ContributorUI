@@ -9,7 +9,7 @@ import Foundation
 
 typealias Contributors = Array<Contributor>
 
-struct Contributor: Decodable {
+struct Contributor: Decodable, Identifiable {
     let id: Int
     let type: String
     let login: String
