@@ -20,9 +20,19 @@ class ContributorCardViewModel: ObservableObject {
         self.github = dependency.github
     }
 
-    func loadContributors() async {
+    func loadContributors(with configuration: ContributorCard.Configuration) async {
         do {
-            let contributors = try await github.fetch(Contributors.self, from: .listRepositoryContributors(owner: owner, repo: repo), parameters: ["per_page":"30"])
+            let contributors = try await github.fetch(
+                Contributors.self,
+                from: .listRepositoryContributors(
+                    owner: owner,
+                    repo: repo
+                ),
+                parameters: [
+                    "anon":"\(configuration.includesAnonymous)",
+                    "per_page":"\(configuration.maximumDisplayCount)"
+                ]
+            )
             await MainActor.run {
                 self.contributors = contributors
             }

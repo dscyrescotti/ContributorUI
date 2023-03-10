@@ -12,7 +12,11 @@ struct ContentView: View {
     var body: some View {
         ContributorCard(owner: "apple", repo: "swift")
             .padding(20)
-            .backgroundStyle(.thickMaterial)
+            .backgroundStyle(.thinMaterial)
+            .countPerRow(10)
+            .maximumDisplayCount(28)
+            .includesAnonymous(false)
+            .padding()
     }
 }
 

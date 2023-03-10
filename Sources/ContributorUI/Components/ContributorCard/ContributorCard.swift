@@ -34,20 +34,20 @@ public struct ContributorCard: View {
         }
         .onChangeSize { size in
             width = size.width
-            print(width)
         }
         .padding(configuration.padding)
         .background(configuration.backgroundStyle)
         .cornerRadius(configuration.cornerRadius)
+        .border(with: configuration.borderStyle, cornerRadius: configuration.cornerRadius)
         .task {
-            await viewModel.loadContributors()
+            await viewModel.loadContributors(with: configuration)
         }
     }
 }
 
 extension ContributorCard {
     public init(owner: String, repo: String) {
-        self.configuration = .default
+        self.configuration = Configuration()
         let dependency = ContributorCardViewModel.Dependency(
             repo: repo,
             owner: owner,
@@ -80,6 +80,30 @@ public extension ContributorCard {
     func cornerRadius(_ radius: CGFloat) -> ContributorCard {
         var configuration = self.configuration
         configuration.cornerRadius = radius
+        return ContributorCard(configuration: configuration, viewModel: self._viewModel)
+    }
+
+    func borderStyle(_ style: BorderStyle) -> ContributorCard {
+        var configuration = self.configuration
+        configuration.borderStyle = style
+        return ContributorCard(configuration: configuration, viewModel: self._viewModel)
+    }
+
+    func countPerRow(_ count: Int) -> ContributorCard {
+        var configuration = self.configuration
+        configuration.countPerRow = count
+        return ContributorCard(configuration: configuration, viewModel: self._viewModel)
+    }
+
+    func maximumDisplayCount(_ count: Int) -> ContributorCard {
+        var configuration = self.configuration
+        configuration.maximumDisplayCount = count
+        return ContributorCard(configuration: configuration, viewModel: self._viewModel)
+    }
+
+    func includesAnonymous(_ value: Bool) -> ContributorCard {
+        var configuration = self.configuration
+        configuration.includesAnonymous = value
         return ContributorCard(configuration: configuration, viewModel: self._viewModel)
     }
 }
