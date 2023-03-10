@@ -12,6 +12,7 @@ class ContributorCardViewModel: ObservableObject {
     let owner: String
     let github: GitHub
 
+    @Published var isLoading: Bool = false
     @Published var contributors: Contributors = []
 
     init(dependency: Dependency) {
@@ -22,6 +23,9 @@ class ContributorCardViewModel: ObservableObject {
 
     func loadContributors(with configuration: ContributorCard.Configuration) async {
         do {
+            await MainActor.run {
+                self.isLoading = true
+            }
             let contributors = try await github.fetch(
                 Contributors.self,
                 from: .listRepositoryContributors(
@@ -34,10 +38,14 @@ class ContributorCardViewModel: ObservableObject {
                 ]
             )
             await MainActor.run {
+                self.isLoading = false
                 self.contributors = contributors
             }
         } catch {
             print(error)
+            await MainActor.run {
+                self.isLoading = false
+            }
         }
     }
 }

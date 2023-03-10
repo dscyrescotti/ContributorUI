@@ -21,15 +21,26 @@ public struct ContributorCard: View {
     public var body: some View {
         let columns = [GridItem](repeating: GridItem(.flexible(), spacing: configuration.spacing), count: configuration.countPerRow)
         let size = max(0, (width - configuration.spacing * CGFloat(configuration.countPerRow - 1)) / CGFloat(configuration.countPerRow))
+        let count = configuration.maximumDisplayCount - viewModel.contributors.count
         LazyVGrid(columns: columns, spacing: configuration.spacing) {
             ForEach(viewModel.contributors) { contributor in
                 AsyncImage(url: URL(string: contributor.avatarURL)) { image in
                     image
                         .resizable()
                 } placeholder: {
-                    Color.black
+                    Rectangle()
+                        .foregroundColor(.secondary)
+                        .shimmering()
                 }
                 .frame(width: size, height: size)
+            }
+            if viewModel.isLoading, count > 0 {
+                ForEach(0..<count, id: \.self) { _ in
+                    Rectangle()
+                        .foregroundColor(.secondary)
+                        .frame(width: size, height: size)
+                        .shimmering()
+                }
             }
         }
         .onChangeSize { size in
@@ -38,9 +49,14 @@ public struct ContributorCard: View {
         .padding(configuration.padding)
         .background(configuration.backgroundStyle)
         .cornerRadius(configuration.cornerRadius)
-        .border(with: configuration.borderStyle, cornerRadius: configuration.cornerRadius)
+        .borderStyle(with: configuration.borderStyle, cornerRadius: configuration.cornerRadius)
         .task {
             await viewModel.loadContributors(with: configuration)
+        }
+        .onChange(of: configuration) { configuration in
+            Task {
+                await viewModel.loadContributors(with: configuration)
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ public enum BorderStyle {
     case bordered(color: Color, lineWidth: CGFloat = 1)
 }
 
-struct BorderModifier: ViewModifier {
+struct BorderStyleModifier: ViewModifier {
     let cornerRadius: CGFloat
     let borderStyle: BorderStyle
 
@@ -30,7 +30,7 @@ struct BorderModifier: ViewModifier {
 }
 
 extension View {
-    func border(with style: BorderStyle, cornerRadius: CGFloat) -> some View {
-        modifier(BorderModifier(cornerRadius: cornerRadius, borderStyle: style))
+    func borderStyle(with style: BorderStyle, cornerRadius: CGFloat) -> some View {
+        modifier(BorderStyleModifier(cornerRadius: cornerRadius, borderStyle: style))
     }
 }

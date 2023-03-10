@@ -9,7 +9,11 @@ import SwiftUI
 import Foundation
 
 extension ContributorCard {
-    public struct Configuration {
+    public struct Configuration: Equatable {
+        public static func == (lhs: ContributorCard.Configuration, rhs: ContributorCard.Configuration) -> Bool {
+            return lhs.includesAnonymous == rhs.includesAnonymous && lhs.maximumDisplayCount == rhs.maximumDisplayCount
+        }
+
         var padding: CGFloat
         var spacing: CGFloat
         var countPerRow: Int
