@@ -28,7 +28,7 @@ public struct ContributorCard: View {
         let minimumHeight: CGFloat = size * CGFloat(configuration.minimumCardRowCount) + configuration.spacing * CGFloat(configuration.minimumCardRowCount - 1)
         LazyVGrid(columns: columns, spacing: configuration.spacing) {
             ForEach(viewModel.contributors) { contributor in
-                AsyncImage(url: contributor.imageURL(with: size)) { image in
+                AsyncImage(url: contributor.imageURL) { image in
                     image
                         .resizable()
                 } placeholder: {

@@ -30,8 +30,7 @@ struct Contributor: Decodable, Identifiable, Equatable {
         case avatarURL = "avatar_url"
     }
     
-    func imageURL(with scale: CGFloat) -> URL? {
-        let scale = Int(ceil(scale))
-        return URL(string: avatarURL + "&s=\(scale)")
+    var imageURL: URL? {
+        return URL(string: avatarURL + "&s=200")
     }
 }
