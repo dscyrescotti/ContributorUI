@@ -1,5 +1,5 @@
 //
-//  SizePreferenceKey.swift
+//  SizeModifer.swift
 //  
 //
 //  Created by Aye Chan on 3/9/23.
@@ -7,12 +7,6 @@
 
 import SwiftUI
 import Foundation
-
-struct SizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
-
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) { }
-}
 
 struct SizeModifer: ViewModifier {
     func body(content: Content) -> some View {
@@ -24,7 +18,6 @@ struct SizeModifer: ViewModifier {
                 }
             }
     }
-
 }
 
 extension View {

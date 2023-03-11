@@ -1,16 +1,12 @@
 //
-//  BorderStyle.swift
+//  BorderStyleModifier.swift
 //  
 //
-//  Created by Aye Chan on 3/10/23.
+//  Created by Aye Chan on 3/11/23.
 //
 
 import SwiftUI
-
-public enum BorderStyle {
-    case borderless
-    case bordered(color: Color, lineWidth: CGFloat = 1)
-}
+import Foundation
 
 struct BorderStyleModifier: ViewModifier {
     let cornerRadius: CGFloat

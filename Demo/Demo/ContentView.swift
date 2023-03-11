@@ -13,7 +13,7 @@ struct ContentView: View {
         ContributorCard(owner: "apple", repo: "swift")
             .padding(20)
             .backgroundStyle(.thinMaterial)
-            .countPerRow(10)
+            .countPerRow(6)
             .maximumDisplayCount(28)
             .includesAnonymous(false)
             .padding()

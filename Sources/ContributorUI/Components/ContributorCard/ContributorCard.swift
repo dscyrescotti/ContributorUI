@@ -9,9 +9,12 @@ import SwiftUI
 
 public struct ContributorCard: View {
     let configuration: Configuration
-    
-    @StateObject internal var viewModel: ContributorCardViewModel
-    @State internal var width: CGFloat = .zero
+
+    @State var width: CGFloat = .zero
+    @State var selection: Contributor?
+    @State var location: CGPoint = .zero
+    @State var labelHeight: CGFloat = .zero
+    @StateObject var viewModel: ContributorCardViewModel
 
     init(configuration: Configuration, viewModel: StateObject<ContributorCardViewModel>) {
         self.configuration = configuration
@@ -32,6 +35,7 @@ public struct ContributorCard: View {
                         .foregroundColor(.secondary)
                         .shimmering()
                 }
+                .hovering(selection: $selection, location: $location, contributor: contributor)
                 .frame(width: size, height: size)
             }
             if viewModel.isLoading, count > 0 {
@@ -50,6 +54,10 @@ public struct ContributorCard: View {
         .background(configuration.backgroundStyle)
         .cornerRadius(configuration.cornerRadius)
         .borderStyle(with: configuration.borderStyle, cornerRadius: configuration.cornerRadius)
+        .coordinateSpace(name: "contributor-cards")
+        .overlay {
+            hoverLabel
+        }
         .task {
             await viewModel.loadContributors(with: configuration)
         }
@@ -57,6 +65,24 @@ public struct ContributorCard: View {
             Task {
                 await viewModel.loadContributors(with: configuration)
             }
+        }
+    }
+
+    @ViewBuilder
+    var hoverLabel: some View {
+        if let contributor = selection {
+            Text(contributor.login)
+                .font(configuration.labelStyle.font)
+                .foregroundColor(configuration.labelStyle.color)
+                .fixedSize(horizontal: true, vertical: false)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 3)
+                .background(configuration.labelStyle.backgroundStyle, in: BubbleBox())
+                .shadow(radius: 10)
+                .onChangeSize { size in
+                    labelHeight = size.height
+                }
+                .position(x: location.x, y: location.y - labelHeight / 2 - 8)
         }
     }
 }
@@ -120,6 +146,12 @@ public extension ContributorCard {
     func includesAnonymous(_ value: Bool) -> ContributorCard {
         var configuration = self.configuration
         configuration.includesAnonymous = value
+        return ContributorCard(configuration: configuration, viewModel: self._viewModel)
+    }
+
+    func labelStyle(_ style: LabelStyle) -> ContributorCard {
+        var configuration = self.configuration
+        configuration.labelStyle = style
         return ContributorCard(configuration: configuration, viewModel: self._viewModel)
     }
 }
