@@ -20,6 +20,7 @@ extension ContributorCard {
         var cornerRadius: CGFloat
         var labelStyle: LabelStyle
         var includesAnonymous: Bool
+        var avatarStyle: AvatarStyle
         var borderStyle: BorderStyle
         var maximumDisplayCount: Int
         var minimumCardRowCount: Int
@@ -32,6 +33,7 @@ extension ContributorCard {
             cornerRadius: CGFloat = 15,
             labelStyle: LabelStyle = .default,
             includesAnonymous: Bool = false,
+            avatarStyle: AvatarStyle = .circle,
             borderStyle: BorderStyle = .borderless,
             maximumDisplayCount: Int = 30,
             minimumCardRowCount: Int = 3,
@@ -39,11 +41,12 @@ extension ContributorCard {
         ) {
             self.padding = padding
             self.spacing = spacing
+            self.labelStyle = labelStyle
+            self.avatarStyle = avatarStyle
+            self.borderStyle = borderStyle
             self.countPerRow = countPerRow
             self.cornerRadius = cornerRadius
-            self.labelStyle = labelStyle
             self.includesAnonymous = includesAnonymous
-            self.borderStyle = borderStyle
             self.maximumDisplayCount = maximumDisplayCount
             self.minimumCardRowCount = minimumCardRowCount
             self.backgroundStyle = AnyShapeStyle(backgroundStyle)

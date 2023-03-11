@@ -38,6 +38,7 @@ public struct ContributorCard: View {
                 }
                 .hovering(selection: $selection, location: $location, contributor: contributor)
                 .frame(width: size, height: size)
+                .clipShape(configuration.avatarStyle.shape())
             }
             if viewModel.isLoading, count > 0 {
                 ForEach(0..<count, id: \.self) { _ in
@@ -45,6 +46,7 @@ public struct ContributorCard: View {
                         .foregroundColor(.secondary)
                         .frame(width: size, height: size)
                         .shimmering()
+                        .clipShape(configuration.avatarStyle.shape())
                 }
             }
         }
@@ -160,6 +162,12 @@ public extension ContributorCard {
     func minimumCardRowCount(_ value: Int) -> ContributorCard {
         var configuration = self.configuration
         configuration.minimumCardRowCount = value
+        return ContributorCard(configuration: configuration, viewModel: self._viewModel)
+    }
+    
+    func avatarStyle(_ style: AvatarStyle) -> ContributorCard {
+        var configuration = self.configuration
+        configuration.avatarStyle = style
         return ContributorCard(configuration: configuration, viewModel: self._viewModel)
     }
 }
