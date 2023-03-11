@@ -7,7 +7,7 @@ let package = Package(
     name: "ContributorUI",
     platforms: [
         .iOS(.v16),
-        .macOS(.v12)
+        .macOS(.v13)
     ],
     products: [
         .library(
