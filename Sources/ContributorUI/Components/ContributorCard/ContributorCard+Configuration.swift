@@ -22,6 +22,7 @@ extension ContributorCard {
         var includesAnonymous: Bool
         var borderStyle: BorderStyle
         var maximumDisplayCount: Int
+        var minimumCardRowCount: Int
         var backgroundStyle: AnyShapeStyle
 
         public init<S: ShapeStyle>(
@@ -33,6 +34,7 @@ extension ContributorCard {
             includesAnonymous: Bool = false,
             borderStyle: BorderStyle = .borderless,
             maximumDisplayCount: Int = 30,
+            minimumCardRowCount: Int = 3,
             backgroundStyle: S = Material.regularMaterial
         ) {
             self.padding = padding
@@ -43,6 +45,7 @@ extension ContributorCard {
             self.includesAnonymous = includesAnonymous
             self.borderStyle = borderStyle
             self.maximumDisplayCount = maximumDisplayCount
+            self.minimumCardRowCount = minimumCardRowCount
             self.backgroundStyle = AnyShapeStyle(backgroundStyle)
         }
     }

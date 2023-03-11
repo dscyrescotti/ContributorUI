@@ -23,11 +23,12 @@ public struct ContributorCard: View {
 
     public var body: some View {
         let columns = [GridItem](repeating: GridItem(.flexible(), spacing: configuration.spacing), count: configuration.countPerRow)
-        let size = max(0, (width - configuration.spacing * CGFloat(configuration.countPerRow - 1)) / CGFloat(configuration.countPerRow))
+        let size: CGFloat = max(0, (width - configuration.spacing * CGFloat(configuration.countPerRow - 1)) / CGFloat(configuration.countPerRow))
         let count = configuration.maximumDisplayCount - viewModel.contributors.count
+        let minimumHeight: CGFloat = size * CGFloat(configuration.minimumCardRowCount) + configuration.spacing * CGFloat(configuration.minimumCardRowCount - 1)
         LazyVGrid(columns: columns, spacing: configuration.spacing) {
             ForEach(viewModel.contributors) { contributor in
-                AsyncImage(url: contributor.imageURL(with: width)) { image in
+                AsyncImage(url: contributor.imageURL(with: size)) { image in
                     image
                         .resizable()
                 } placeholder: {
@@ -50,6 +51,7 @@ public struct ContributorCard: View {
         .onChangeSize { size in
             width = size.width
         }
+        .frame(minHeight: minimumHeight, alignment: .topLeading)
         .padding(configuration.padding)
         .background(configuration.backgroundStyle)
         .cornerRadius(configuration.cornerRadius)
@@ -152,6 +154,12 @@ public extension ContributorCard {
     func labelStyle(_ style: LabelStyle) -> ContributorCard {
         var configuration = self.configuration
         configuration.labelStyle = style
+        return ContributorCard(configuration: configuration, viewModel: self._viewModel)
+    }
+    
+    func minimumCardRowCount(_ value: Int) -> ContributorCard {
+        var configuration = self.configuration
+        configuration.minimumCardRowCount = value
         return ContributorCard(configuration: configuration, viewModel: self._viewModel)
     }
 }
