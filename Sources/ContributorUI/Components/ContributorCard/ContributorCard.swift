@@ -27,7 +27,7 @@ public struct ContributorCard: View {
         let count = configuration.maximumDisplayCount - viewModel.contributors.count
         LazyVGrid(columns: columns, spacing: configuration.spacing) {
             ForEach(viewModel.contributors) { contributor in
-                AsyncImage(url: URL(string: contributor.avatarURL)) { image in
+                AsyncImage(url: contributor.imageURL(with: width)) { image in
                     image
                         .resizable()
                 } placeholder: {

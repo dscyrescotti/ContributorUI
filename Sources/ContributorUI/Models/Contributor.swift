@@ -29,4 +29,9 @@ struct Contributor: Decodable, Identifiable, Equatable {
         case siteAdmin = "site_admin"
         case avatarURL = "avatar_url"
     }
+    
+    func imageURL(with scale: CGFloat) -> URL? {
+        let scale = Int(ceil(scale))
+        return URL(string: avatarURL + "&s=\(scale)")
+    }
 }
