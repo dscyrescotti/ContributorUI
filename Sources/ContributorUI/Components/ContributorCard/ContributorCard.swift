@@ -16,6 +16,10 @@ public struct ContributorCard: View {
     @State var labelHeight: CGFloat = .zero
     @StateObject var viewModel: ContributorCardViewModel
 
+    #if canImport(XCTest)
+    internal let inspection = Inspection<Self>()
+    #endif
+
     init(configuration: Configuration, viewModel: StateObject<ContributorCardViewModel>) {
         self.configuration = configuration
         self._viewModel = viewModel
@@ -70,6 +74,11 @@ public struct ContributorCard: View {
                 await viewModel.loadContributors(with: configuration)
             }
         }
+        #if canImport(XCTest)
+        .onReceive(inspection.notice) {
+            self.inspection.visit(self, $0)
+        }
+        #endif
     }
 
     @ViewBuilder
@@ -92,6 +101,18 @@ public struct ContributorCard: View {
 }
 
 extension ContributorCard {
+    #if canImport(XCTest)
+    init(owner: String, repo: String, github: GitHub) {
+        self.configuration = Configuration()
+        let dependency = ContributorCardViewModel.Dependency(
+            repo: repo,
+            owner: owner,
+            github: github
+        )
+        let viewModel = ContributorCardViewModel(dependency: dependency)
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
+    #else
     public init(owner: String, repo: String) {
         self.configuration = Configuration()
         let dependency = ContributorCardViewModel.Dependency(
@@ -102,6 +123,7 @@ extension ContributorCard {
         let viewModel = ContributorCardViewModel(dependency: dependency)
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
+    #endif
 }
 
 public extension ContributorCard {
