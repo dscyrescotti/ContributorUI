@@ -63,8 +63,8 @@ final class NetworkingTests: XCTestCase {
             XCTAssertEqual(error.domain, "ContributorUI.APIError")
             let apiError = error.apiError()
             XCTAssertNotNil(apiError)
-            XCTAssertEqual(apiError!.errorDescription, "Invalid URL")
-            XCTAssertEqual(apiError!.recoverySuggestion, "The URL is not valid to perform network request.")
+            XCTAssertEqual(apiError?.errorDescription, "Invalid URL")
+            XCTAssertEqual(apiError?.recoverySuggestion, "The URL is not valid to perform network request.")
         }
     }
 }

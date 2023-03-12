@@ -12,6 +12,7 @@ class ContributorCardViewModel: ObservableObject {
     let owner: String
     let github: GitHub
 
+    @Published var error: APIError?
     @Published var isLoading: Bool = false
     @Published var contributors: Contributors = []
 
@@ -24,6 +25,7 @@ class ContributorCardViewModel: ObservableObject {
     func loadContributors(with configuration: ContributorCard.Configuration) async {
         do {
             await MainActor.run {
+                self.error = nil
                 self.isLoading = true
             }
             let contributors = try await github.fetch(
@@ -43,6 +45,7 @@ class ContributorCardViewModel: ObservableObject {
             }
         } catch {
             await MainActor.run {
+                self.error = error as? APIError ?? .unknownError
                 self.isLoading = false
             }
         }

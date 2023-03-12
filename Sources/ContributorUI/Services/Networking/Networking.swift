@@ -24,8 +24,22 @@ class Networking<Interface: API> {
 
     func fetch<T: Decodable>(_ type: T.Type, from endpoint: Interface.Endpoints, parameters: [String: String]) async throws -> T {
         let request = try interface.urlRequest(endpoint, parameters: parameters)
-        let (data, _) = try await session.data(for: request)
-        let result = try decoder.decode(T.self, from: data)
-        return result
+        let (data, response) = try await session.data(for: request)
+        guard let response = response as? HTTPURLResponse else {
+            throw APIError.unknownError
+        }
+        switch response.statusCode {
+        case 200:
+            let result = try decoder.decode(T.self, from: data)
+            return result
+        case 204:
+            throw APIError.emptyError
+        case 403:
+            throw APIError.forbiddenError
+        case 404:
+            throw APIError.notFoundError
+        default:
+            throw APIError.unknownError
+        }
     }
 }

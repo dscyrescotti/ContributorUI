@@ -26,59 +26,69 @@ public struct ContributorCard: View {
     }
 
     public var body: some View {
+        contentView
+            .onChangeSize { size in
+                width = size.width
+            }
+            .padding(configuration.padding)
+            .background(configuration.backgroundStyle)
+            .cornerRadius(configuration.cornerRadius)
+            .borderStyle(with: configuration.borderStyle, cornerRadius: configuration.cornerRadius)
+            .coordinateSpace(name: "contributor-cards")
+            .overlay {
+                hoverLabel
+            }
+            .task {
+                await viewModel.loadContributors(with: configuration)
+            }
+            .onChange(of: configuration) { configuration in
+                Task {
+                    await viewModel.loadContributors(with: configuration)
+                }
+            }
+            #if canImport(XCTest)
+            .onReceive(inspection.notice) {
+                self.inspection.visit(self, $0)
+            }
+            #endif
+    }
+
+    @ViewBuilder
+    var contentView: some View {
         let columns = [GridItem](repeating: GridItem(.flexible(), spacing: configuration.spacing), count: configuration.countPerRow)
         let size: CGFloat = max(0, (width - configuration.spacing * CGFloat(configuration.countPerRow - 1)) / CGFloat(configuration.countPerRow))
         let count = configuration.maximumDisplayCount - viewModel.contributors.count
         let minimumHeight: CGFloat = size * CGFloat(configuration.minimumCardRowCount) + configuration.spacing * CGFloat(configuration.minimumCardRowCount - 1)
-        LazyVGrid(columns: columns, spacing: configuration.spacing) {
-            ForEach(viewModel.contributors) { contributor in
-                AsyncImage(url: contributor.imageURL) { image in
-                    image
-                        .resizable()
-                } placeholder: {
-                    Rectangle()
-                        .foregroundColor(.secondary)
-                        .shimmering()
+        
+        if viewModel.contributors.isEmpty, let error = viewModel.error {
+            errorPrompt(error)
+        } else {
+            LazyVGrid(columns: columns, spacing: configuration.spacing) {
+                ForEach(viewModel.contributors) { contributor in
+                    AsyncImage(url: contributor.imageURL) { image in
+                        image
+                            .resizable()
+                    } placeholder: {
+                        Rectangle()
+                            .foregroundColor(.secondary)
+                            .shimmering()
+                    }
+                    .hovering(selection: $selection, location: $location, contributor: contributor)
+                    .frame(width: size, height: size)
+                    .clipShape(configuration.avatarStyle.shape())
                 }
-                .hovering(selection: $selection, location: $location, contributor: contributor)
-                .frame(width: size, height: size)
-                .clipShape(configuration.avatarStyle.shape())
-            }
-            if viewModel.isLoading, count > 0 {
-                ForEach(0..<count, id: \.self) { _ in
-                    Rectangle()
-                        .foregroundColor(.secondary)
-                        .frame(width: size, height: size)
-                        .shimmering()
-                        .clipShape(configuration.avatarStyle.shape())
+                if viewModel.isLoading, count > 0 {
+                    ForEach(0..<count, id: \.self) { _ in
+                        Rectangle()
+                            .foregroundColor(.secondary)
+                            .frame(width: size, height: size)
+                            .shimmering()
+                            .clipShape(configuration.avatarStyle.shape())
+                    }
                 }
             }
+            .frame(minHeight: minimumHeight, alignment: .topLeading)
         }
-        .onChangeSize { size in
-            width = size.width
-        }
-        .frame(minHeight: minimumHeight, alignment: .topLeading)
-        .padding(configuration.padding)
-        .background(configuration.backgroundStyle)
-        .cornerRadius(configuration.cornerRadius)
-        .borderStyle(with: configuration.borderStyle, cornerRadius: configuration.cornerRadius)
-        .coordinateSpace(name: "contributor-cards")
-        .overlay {
-            hoverLabel
-        }
-        .task {
-            await viewModel.loadContributors(with: configuration)
-        }
-        .onChange(of: configuration) { configuration in
-            Task {
-                await viewModel.loadContributors(with: configuration)
-            }
-        }
-        #if canImport(XCTest)
-        .onReceive(inspection.notice) {
-            self.inspection.visit(self, $0)
-        }
-        #endif
     }
 
     @ViewBuilder
@@ -98,9 +108,43 @@ public struct ContributorCard: View {
                 .position(x: location.x, y: location.y - labelHeight / 2 - 8)
         }
     }
+
+    @ViewBuilder
+    func errorPrompt(_ error: APIError) -> some View {
+        VStack(spacing: 5) {
+            if let title = error.errorDescription, let message = error.recoverySuggestion {
+                Text(title)
+                    .font(.headline)
+                Text(message)
+                    .font(.subheadline)
+                    .multilineTextAlignment(.center)
+            }
+            if error == .unknownError {
+                Button {
+                    Task {
+                        await viewModel.loadContributors(with: configuration)
+                    }
+                } label: {
+                    Label("Retry", systemImage: "arrow.clockwise")
+                }
+                .font(.callout)
+            }
+        }
+    }
 }
 
 extension ContributorCard {
+    public init(owner: String, repo: String) {
+        self.configuration = Configuration()
+        let dependency = ContributorCardViewModel.Dependency(
+            repo: repo,
+            owner: owner,
+            github: .live
+        )
+        let viewModel = ContributorCardViewModel(dependency: dependency)
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
+
     #if canImport(XCTest)
     init(owner: String, repo: String, github: GitHub) {
         self.configuration = Configuration()
@@ -108,17 +152,6 @@ extension ContributorCard {
             repo: repo,
             owner: owner,
             github: github
-        )
-        let viewModel = ContributorCardViewModel(dependency: dependency)
-        self._viewModel = StateObject(wrappedValue: viewModel)
-    }
-    #else
-    public init(owner: String, repo: String) {
-        self.configuration = Configuration()
-        let dependency = ContributorCardViewModel.Dependency(
-            repo: repo,
-            owner: owner,
-            github: .live
         )
         let viewModel = ContributorCardViewModel(dependency: dependency)
         self._viewModel = StateObject(wrappedValue: viewModel)
