@@ -51,7 +51,7 @@ final class NetworkingTests: XCTestCase {
         }
     }
 
-    func testNetworkingWithAPIError() async {
+    func testNetworkingWithInvalidURLError() async {
         let github = GitHubAPI()
         MockURLProtocol.requestHandler = { request in
             throw APIError.invalidURL
@@ -65,6 +65,74 @@ final class NetworkingTests: XCTestCase {
             XCTAssertNotNil(apiError)
             XCTAssertEqual(apiError?.errorDescription, "Invalid URL")
             XCTAssertEqual(apiError?.recoverySuggestion, "The URL is not valid to perform network request.")
+        }
+    }
+    
+    func testNetworkingWithNotFoundError() async {
+        let github = GitHubAPI()
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(url: request.url!, statusCode: 404, httpVersion: nil, headerFields: nil)!
+            return (response, Data())
+        }
+        let network = Networking(on: github, session: session)
+        do {
+            let _ = try await network.fetch(Contributors.self, from: .listRepositoryContributors(owner: "owner", repo: "repository"), parameters: [:])
+        } catch let error as NSError {
+            let apiError = error.apiError()
+            XCTAssertNotNil(apiError)
+            XCTAssertEqual(apiError?.errorDescription, "Nothing Found")
+            XCTAssertEqual(apiError?.recoverySuggestion, "There is no repository that you requested. Please provide a valid repository.")
+        }
+    }
+    
+    func testNetworkingWithEmptyError() async {
+        let github = GitHubAPI()
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(url: request.url!, statusCode: 204, httpVersion: nil, headerFields: nil)!
+            return (response, Data())
+        }
+        let network = Networking(on: github, session: session)
+        do {
+            let _ = try await network.fetch(Contributors.self, from: .listRepositoryContributors(owner: "owner", repo: "repository"), parameters: [:])
+        } catch let error as NSError {
+            let apiError = error.apiError()
+            XCTAssertNotNil(apiError)
+            XCTAssertEqual(apiError?.errorDescription, "Nothing Existed")
+            XCTAssertEqual(apiError?.recoverySuggestion, "There is no resource or data existed on the repository. Please provide a valid repository.")
+        }
+    }
+    
+    func testNetworkingWithUnknownError() async {
+        let github = GitHubAPI()
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(url: request.url!, statusCode: 500, httpVersion: nil, headerFields: nil)!
+            return (response, Data())
+        }
+        let network = Networking(on: github, session: session)
+        do {
+            let _ = try await network.fetch(Contributors.self, from: .listRepositoryContributors(owner: "owner", repo: "repository"), parameters: [:])
+        } catch let error as NSError {
+            let apiError = error.apiError()
+            XCTAssertNotNil(apiError)
+            XCTAssertEqual(apiError?.errorDescription, "Something Went Wrong")
+            XCTAssertEqual(apiError?.recoverySuggestion, "Something did not work out as expected. Please try again.")
+        }
+    }
+    
+    func testNetworkingWithForbiddenError() async {
+        let github = GitHubAPI()
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(url: request.url!, statusCode: 403, httpVersion: nil, headerFields: nil)!
+            return (response, Data())
+        }
+        let network = Networking(on: github, session: session)
+        do {
+            let _ = try await network.fetch(Contributors.self, from: .listRepositoryContributors(owner: "owner", repo: "repository"), parameters: [:])
+        } catch let error as NSError {
+            let apiError = error.apiError()
+            XCTAssertNotNil(apiError)
+            XCTAssertEqual(apiError?.errorDescription, "Access Denied")
+            XCTAssertEqual(apiError?.recoverySuggestion, "You do not have an authorized access to the repository. Please provide a valid repository.")
         }
     }
 }

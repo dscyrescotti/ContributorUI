@@ -27,6 +27,15 @@ class ContributorCardTests: XCTestCase {
         }
         return Networking(on: githubAPI, session: session)
     }
+    
+    func githubWithError(_ code: Int) -> GitHub {
+        let githubAPI = GitHubAPI()
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(url: request.url!, statusCode: code, httpVersion: nil, headerFields: nil)!
+            return (response, Data())
+        }
+        return Networking(on: githubAPI, session: session)
+    }
 
     override class func setUp() {
         MockURLProtocol.requestHandler = nil
@@ -186,6 +195,38 @@ class ContributorCardTests: XCTestCase {
             XCTAssertEqual(padding.bottom, 3)
             XCTAssertEqual(padding.leading, 6)
             XCTAssertEqual(padding.trailing, 6)
+        }
+        ViewHosting.host(view: sut.frame(width: 1000, height: 1000))
+        wait(for: [exp1, exp2], timeout: 3)
+    }
+    
+    func testContributorCardErrorPrompt204() throws {
+        let sut = ContributorCard(owner: "owner", repo: "repo", github: githubWithError(204))
+        let exp = sut.inspection.inspect(after: 1) { view in
+            let vStack = try view.vStack()
+            XCTAssertNoThrow(try vStack.find(text: "Nothing Existed"))
+            XCTAssertNoThrow(try vStack.find(text: "There is no resource or data existed on the repository. Please provide a valid repository."))
+        }
+        ViewHosting.host(view: sut.frame(width: 1000, height: 1000))
+        wait(for: [exp], timeout: 2)
+    }
+    
+    func testContributorCardErrorPromptUnknown() throws {
+        let sut = ContributorCard(owner: "owner", repo: "repo", github: githubWithError(500))
+        let exp1 = sut.inspection.inspect(after: 1) { view in
+            let vStack = try view.vStack()
+            XCTAssertNoThrow(try vStack.find(text: "Something Went Wrong"))
+            XCTAssertNoThrow(try vStack.find(text: "Something did not work out as expected. Please try again."))
+            let button = try vStack.find(button: "Retry")
+            MockURLProtocol.requestHandler = { request in
+                let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+                let url = Bundle.module.url(forResource: "contributors", withExtension: "json")!
+                return (response, try Data(contentsOf: url))
+            }
+            try button.tap()
+        }
+        let exp2 = sut.inspection.inspect(after: 2) { view in
+            XCTAssertNoThrow(try view.lazyVGrid())
         }
         ViewHosting.host(view: sut.frame(width: 1000, height: 1000))
         wait(for: [exp1, exp2], timeout: 3)
