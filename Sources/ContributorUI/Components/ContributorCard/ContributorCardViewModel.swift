@@ -42,7 +42,6 @@ class ContributorCardViewModel: ObservableObject {
                 self.contributors = contributors
             }
         } catch {
-            print(error)
             await MainActor.run {
                 self.isLoading = false
             }
