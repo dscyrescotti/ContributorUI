@@ -9,7 +9,7 @@ import Foundation
 
 typealias Contributors = Array<Contributor>
 
-struct Contributor: Decodable {
+struct Contributor: Decodable, Identifiable, Equatable {
     let id: Int
     let type: String
     let login: String
@@ -28,5 +28,9 @@ struct Contributor: Decodable {
         case htmlURL = "html_url"
         case siteAdmin = "site_admin"
         case avatarURL = "avatar_url"
+    }
+    
+    var imageURL: URL? {
+        return URL(string: avatarURL + "&s=200")
     }
 }
