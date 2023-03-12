@@ -61,6 +61,10 @@ final class NetworkingTests: XCTestCase {
             let _ = try await network.fetch(Contributors.self, from: .listRepositoryContributors(owner: "owner", repo: "repository"), parameters: [:])
         } catch let error as NSError {
             XCTAssertEqual(error.domain, "ContributorUI.APIError")
+            let apiError = error.apiError()
+            XCTAssertNotNil(apiError)
+            XCTAssertEqual(apiError!.errorDescription, "Invalid URL")
+            XCTAssertEqual(apiError!.recoverySuggestion, "The URL is not valid to perform network request.")
         }
     }
 }

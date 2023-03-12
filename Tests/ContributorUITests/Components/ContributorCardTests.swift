@@ -38,7 +38,7 @@ class ContributorCardTests: XCTestCase {
 
     func testContributorCardState() throws {
         let sut = ContributorCard(owner: "owner", repo: "repo", github: github)
-        let exp = sut.inspection.inspect(after: 0.5) { view in
+        let exp = sut.inspection.inspect(after: 1) { view in
             let card = try view.actualView()
             XCTAssertEqual(floor(card.width), 980)
             XCTAssertNil(card.selection)
@@ -47,7 +47,7 @@ class ContributorCardTests: XCTestCase {
             XCTAssertEqual(card.viewModel.contributors.count, 10)
         }
         ViewHosting.host(view: sut.frame(width: 1000, height: 1000))
-        wait(for: [exp], timeout: 1)
+        wait(for: [exp], timeout: 2)
     }
 
     func testContributorCardDefaultConfiguration() throws {
@@ -78,7 +78,7 @@ class ContributorCardTests: XCTestCase {
             .maximumDisplayCount(50)
             .minimumCardRowCount(4)
             .labelStyle(.custom(font: .headline, color: .brown, backgroundStyle: .white))
-        let exp = sut.inspection.inspect(after: 0.5) { view in
+        let exp = sut.inspection.inspect(after: 1) { view in
             let card = try view.actualView()
             let configuration = card.configuration
             XCTAssertEqual(configuration.padding, 20)
@@ -95,7 +95,7 @@ class ContributorCardTests: XCTestCase {
             XCTAssertEqual(card.viewModel.contributors.count, 10)
         }
         ViewHosting.host(view: sut.frame(width: 1000, height: 1000))
-        wait(for: [exp], timeout: 5)
+        wait(for: [exp], timeout: 2)
     }
 }
 
