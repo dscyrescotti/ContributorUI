@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
     name: "ContributorUI",
     platforms: [
-        .iOS(.v15),
-        .macOS(.v12)
+        .iOS(.v16),
+        .macOS(.v13)
     ],
     products: [
         .library(
@@ -15,7 +15,9 @@ let package = Package(
             targets: ["ContributorUI"]
         ),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/nalexn/ViewInspector.git", .upToNextMajor(from: "0.9.5"))
+    ],
     targets: [
         .target(
             name: "ContributorUI",
@@ -23,7 +25,10 @@ let package = Package(
         ),
         .testTarget(
             name: "ContributorUITests",
-            dependencies: ["ContributorUI"]
+            dependencies: ["ContributorUI", "ViewInspector"],
+            resources: [
+                .process("Resources"),
+            ]
         ),
     ],
     swiftLanguageVersions: [.v5]
