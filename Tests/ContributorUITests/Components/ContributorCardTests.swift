@@ -195,9 +195,24 @@ class ContributorCardTests: XCTestCase {
             XCTAssertEqual(padding.bottom, 3)
             XCTAssertEqual(padding.leading, 6)
             XCTAssertEqual(padding.trailing, 6)
+
+            let cell = try view.lazyVGrid().forEach(0).asyncImage(2)
+            XCTAssertNoThrow(try cell.callOnTapGesture())
+        }
+        let exp3 = sut.inspection.inspect(after: 3) { view in
+            let card = try view.actualView()
+            XCTAssertNotNil(card.selection)
+            XCTAssertEqual(card.selection, card.viewModel.contributors[2])
+
+            let cell = try view.lazyVGrid().forEach(0).asyncImage(2)
+            XCTAssertNoThrow(try cell.callOnTapGesture())
+        }
+        let exp4 = sut.inspection.inspect(after: 3.5) { view in
+            let card = try view.actualView()
+            XCTAssertNil(card.selection)
         }
         ViewHosting.host(view: sut.frame(width: 1000, height: 1000))
-        wait(for: [exp1, exp2], timeout: 3)
+        wait(for: [exp1, exp2, exp3, exp4], timeout: 5)
     }
     
     func testContributorCardErrorPrompt204() throws {
