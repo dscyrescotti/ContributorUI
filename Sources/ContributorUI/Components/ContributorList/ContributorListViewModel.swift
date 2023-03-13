@@ -1,13 +1,13 @@
 //
-//  ContributorCardViewModel.swift
+//  ContributorListViewModel.swift
 //  
 //
-//  Created by Aye Chan on 3/9/23.
+//  Created by Aye Chan on 3/13/23.
 //
 
 import Foundation
 
-class ContributorCardViewModel: ObservableObject {
+class ContributorListViewModel: ObservableObject {
     let github: GitHub
 
     @Published var error: APIError?
@@ -18,7 +18,7 @@ class ContributorCardViewModel: ObservableObject {
         self.github = github
     }
 
-    func loadContributors(with configuration: ContributorCard.Configuration) async {
+    func loadContributors(with configuration: ContributorList.Configuration) async {
         do {
             await MainActor.run {
                 self.error = nil
@@ -30,10 +30,7 @@ class ContributorCardViewModel: ObservableObject {
                     owner: configuration.owner,
                     repo: configuration.repo
                 ),
-                parameters: [
-                    "anon":"\(configuration.includesAnonymous)",
-                    "per_page":"\(configuration.maximumDisplayCount)"
-                ]
+                parameters: [:]
             )
             await MainActor.run {
                 self.isLoading = false

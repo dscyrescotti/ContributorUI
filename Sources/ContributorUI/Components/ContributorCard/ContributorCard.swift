@@ -135,25 +135,15 @@ public struct ContributorCard: View {
 
 extension ContributorCard {
     public init(owner: String, repo: String) {
-        self.configuration = Configuration()
-        let dependency = ContributorCardViewModel.Dependency(
-            repo: repo,
-            owner: owner,
-            github: .live
-        )
-        let viewModel = ContributorCardViewModel(dependency: dependency)
+        self.configuration = Configuration(repo: repo, owner: owner)
+        let viewModel = ContributorCardViewModel(github: .live)
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
 
     #if canImport(XCTest)
     init(owner: String, repo: String, github: GitHub) {
-        self.configuration = Configuration()
-        let dependency = ContributorCardViewModel.Dependency(
-            repo: repo,
-            owner: owner,
-            github: github
-        )
-        let viewModel = ContributorCardViewModel(dependency: dependency)
+        self.configuration = Configuration(repo: repo, owner: owner)
+        let viewModel = ContributorCardViewModel(github: github)
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     #endif

@@ -14,6 +14,8 @@ extension ContributorCard {
             return lhs.includesAnonymous == rhs.includesAnonymous && lhs.maximumDisplayCount == rhs.maximumDisplayCount
         }
 
+        let repo: String
+        let owner: String
         var padding: CGFloat
         var spacing: CGFloat
         var countPerRow: Int
@@ -27,6 +29,8 @@ extension ContributorCard {
         var backgroundStyle: AnyShapeStyle
 
         public init<S: ShapeStyle>(
+            repo: String,
+            owner: String,
             padding: CGFloat = 10,
             spacing: CGFloat = 8,
             countPerRow: Int = 8,
@@ -39,6 +43,8 @@ extension ContributorCard {
             minimumCardRowCount: Int = 3,
             backgroundStyle: S = Material.regularMaterial
         ) {
+            self.repo = repo
+            self.owner = owner
             self.padding = padding
             self.spacing = spacing
             self.labelStyle = labelStyle
