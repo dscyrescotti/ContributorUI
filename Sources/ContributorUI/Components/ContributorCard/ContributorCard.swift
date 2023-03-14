@@ -71,7 +71,6 @@ public struct ContributorCard: View {
                     } placeholder: {
                         Rectangle()
                             .foregroundColor(.secondary)
-                            .shimmering()
                     }
                     .hovering(selection: $selection, location: $location, contributor: contributor)
                     .frame(width: size, height: size)
