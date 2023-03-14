@@ -47,6 +47,7 @@ struct TableListContainer: View, ListContainer {
     func cell(_ element: Collection.Element) -> some View {
         HStack(spacing: 10) {
             KFImage(element.imageURL)
+                .startLoadingBeforeViewAppear()
                 .placeholder {
                     Rectangle()
                         .foregroundColor(.gray.opacity(0.4))
