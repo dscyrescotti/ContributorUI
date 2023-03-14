@@ -11,8 +11,8 @@ class ContributorListViewModel: ObservableObject {
     let github: GitHub
 
     @Published var error: APIError?
-    @Published var isLoading: Bool = false
     @Published var contributors: Contributors = []
+    @Published var state: ListContainerState = .idle
 
     init(github: GitHub) {
         self.github = github
@@ -22,7 +22,7 @@ class ContributorListViewModel: ObservableObject {
         do {
             await MainActor.run {
                 self.error = nil
-                self.isLoading = true
+                self.state = .loading
             }
             let contributors = try await github.fetch(
                 Contributors.self,
@@ -33,13 +33,13 @@ class ContributorListViewModel: ObservableObject {
                 parameters: [:]
             )
             await MainActor.run {
-                self.isLoading = false
+                self.state = contributors.isEmpty ? .end : .idle
                 self.contributors = contributors
             }
         } catch {
             await MainActor.run {
                 self.error = error as? APIError ?? .unknownError
-                self.isLoading = false
+                self.state = .idle
             }
         }
     }

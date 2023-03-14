@@ -21,7 +21,7 @@ public struct ContributorList: View {
     public var body: some View {
         NavigationStack {
             configuration.listAppearance
-                .container(with: viewModel.contributors)
+                .container(with: viewModel.contributors, state: viewModel.state)
                 .navigationTitle("Contributors")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {

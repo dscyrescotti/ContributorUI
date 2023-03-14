@@ -69,9 +69,10 @@ public struct ContributorCard: View {
                     KFImage(contributor.imageURL)
                         .placeholder {
                             Rectangle()
-                                .foregroundColor(.secondary)
+                                .foregroundColor(.gray.opacity(0.4))
                         }
                         .resizable()
+                        .diskCacheExpiration(.days(1))
                         .hovering(selection: $selection, location: $location, contributor: contributor)
                         .frame(width: size, height: size)
                         .clipShape(configuration.avatarStyle.shape())
@@ -79,7 +80,7 @@ public struct ContributorCard: View {
                 if viewModel.isLoading, count > 0 {
                     ForEach(0..<count, id: \.self) { _ in
                         Rectangle()
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.gray.opacity(0.4))
                             .frame(width: size, height: size)
                             .shimmering()
                             .clipShape(configuration.avatarStyle.shape())

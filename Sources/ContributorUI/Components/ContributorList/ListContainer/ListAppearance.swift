@@ -15,10 +15,10 @@ public enum ListAppearance {
 
 extension ListAppearance {
     @ViewBuilder
-    func container(with contributors: Contributors) -> some View {
+    func container(with contributors: Contributors, state: ListContainerState) -> some View {
         switch self {
         case .table:
-            TableListContainer(collection: contributors)
+            TableListContainer(collection: contributors, state: state)
         case .grid:
             EmptyView()
         }
