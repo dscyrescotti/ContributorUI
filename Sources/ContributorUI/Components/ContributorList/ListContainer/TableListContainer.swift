@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Foundation
+import Kingfisher
 
 struct TableListContainer: View, ListContainer {
     typealias Collection = Contributors
@@ -28,15 +29,13 @@ struct TableListContainer: View, ListContainer {
 
     func cell(_ element: Collection.Element) -> some View {
         HStack {
-            AsyncImage(url: element.imageURL) { image in
-                image
-                    .resizable()
-            } placeholder: {
-                Rectangle()
-                    .foregroundColor(.secondary)
-                    .shimmering()
-            }
-            .frame(width: 50, height: 50)
+            KFImage(contributor.imageURL)
+                .placeholder {
+                    Rectangle()
+                        .foregroundColor(.secondary)
+                }
+                .resizable()
+                .frame(width: 50, height: 50)
             VStack(alignment: .leading, spacing: 5) {
                 Text(element.login)
                     .font(.headline)

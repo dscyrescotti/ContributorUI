@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 public struct ContributorCard: View {
     let configuration: Configuration
@@ -65,16 +66,15 @@ public struct ContributorCard: View {
         } else {
             LazyVGrid(columns: columns, spacing: configuration.spacing) {
                 ForEach(viewModel.contributors) { contributor in
-                    AsyncImage(url: contributor.imageURL) { image in
-                        image
-                            .resizable()
-                    } placeholder: {
-                        Rectangle()
-                            .foregroundColor(.secondary)
-                    }
-                    .hovering(selection: $selection, location: $location, contributor: contributor)
-                    .frame(width: size, height: size)
-                    .clipShape(configuration.avatarStyle.shape())
+                    KFImage(contributor.imageURL)
+                        .placeholder {
+                            Rectangle()
+                                .foregroundColor(.secondary)
+                        }
+                        .resizable()
+                        .hovering(selection: $selection, location: $location, contributor: contributor)
+                        .frame(width: size, height: size)
+                        .clipShape(configuration.avatarStyle.shape())
                 }
                 if viewModel.isLoading, count > 0 {
                     ForEach(0..<count, id: \.self) { _ in
