@@ -10,10 +10,9 @@ import Foundation
 import Kingfisher
 
 struct TableListContainer: View, ListContainer {
-    typealias Collection = Contributors
-
-    var collection: Collection
+    var contributors: Contributors
     var state: ListContainerState
+    var configutation: ContributorList.Configuration
 
     @ScaledMetric var size: CGFloat = 50
 
@@ -23,14 +22,14 @@ struct TableListContainer: View, ListContainer {
 
     var container: some View {
         List {
-            ForEach(collection) { element in
+            ForEach(contributors) { element in
                 cell(element)
             }
             switch state {
             case .idle:
                 EmptyView()
             case .loading:
-                if collection.isEmpty {
+                if contributors.isEmpty {
                     ForEach(0..<4, id: \.self) { index in
                         placeholder()
                     }
@@ -44,9 +43,9 @@ struct TableListContainer: View, ListContainer {
         .listStyle(.plain)
     }
 
-    func cell(_ element: Collection.Element) -> some View {
+    func cell(_ contributor: Contributor) -> some View {
         HStack(spacing: 10) {
-            KFImage(element.imageURL)
+            KFImage(contributor.imageURL)
                 .startLoadingBeforeViewAppear()
                 .placeholder {
                     Rectangle()
@@ -55,10 +54,11 @@ struct TableListContainer: View, ListContainer {
                 .resizable()
                 .diskCacheExpiration(.days(1))
                 .frame(width: size, height: size)
+                .clipShape(configutation.avatarStyle.shape())
             VStack(alignment: .leading, spacing: 5) {
-                Text(element.login)
+                Text(contributor.login)
                     .font(.headline)
-                Text("\(element.contributions) commits")
+                Text("\(contributor.contributions) commits")
                     .font(.caption)
             }
         }
@@ -70,6 +70,7 @@ struct TableListContainer: View, ListContainer {
                 .foregroundColor(.gray.opacity(0.4))
                 .frame(width: size, height: size)
                 .shimmering()
+                .clipShape(configutation.avatarStyle.shape())
                 .fixedSize()
             VStack(alignment: .leading, spacing: 5) {
                 Rectangle()

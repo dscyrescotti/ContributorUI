@@ -20,8 +20,7 @@ public struct ContributorList: View {
 
     public var body: some View {
         NavigationStack {
-            configuration.listAppearance
-                .container(with: viewModel.contributors, state: viewModel.state)
+            container
                 .navigationTitle("Contributors")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -34,6 +33,16 @@ public struct ContributorList: View {
         }
         .task {
             await viewModel.loadContributors(with: configuration)
+        }
+    }
+
+    @ViewBuilder
+    var container: some View {
+        switch configuration.listAppearance {
+        case .table:
+            TableListContainer(contributors: viewModel.contributors, state: viewModel.state, configutation: configuration)
+        case .grid:
+            EmptyView()
         }
     }
 }

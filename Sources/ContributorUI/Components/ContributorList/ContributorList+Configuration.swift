@@ -11,15 +11,18 @@ extension ContributorList {
     public struct Configuration {
         let repo: String
         let owner: String
-        var listAppearance: ListAppearance
+        var avatarStyle: AvatarStyle
+        var listAppearance: ContributorListStyle
 
         init(
             repo: String,
             owner: String,
-            listAppearance: ListAppearance = .table
+            avatarStyle: AvatarStyle = .circle,
+            listAppearance: ContributorListStyle = .table
         ) {
             self.repo = repo
             self.owner = owner
+            self.avatarStyle = avatarStyle
             self.listAppearance = listAppearance
         }
     }

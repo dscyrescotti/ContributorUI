@@ -12,13 +12,13 @@ protocol ListContainer {
     associatedtype Container: View
     associatedtype Cell: View
     associatedtype Placeholder: View
-    associatedtype Collection: RandomAccessCollection where Collection.Element: Identifiable & Equatable
 
-    var collection: Collection { get set }
+    var contributors: Contributors { get set }
     var state: ListContainerState { get set }
+    var configutation: ContributorList.Configuration { get set }
 
     var container: Container { get }
-    func cell(_ element: Collection.Element) -> Cell
+    func cell(_ contributor: Contributor) -> Cell
     func placeholder() -> Placeholder
 }
 
