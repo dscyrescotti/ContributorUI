@@ -40,7 +40,7 @@ public struct ContributorList: View {
     var container: some View {
         switch configuration.listAppearance {
         case .table:
-            TableListContainer(contributors: viewModel.contributors, state: viewModel.state, configutation: configuration)
+            TableListContainer(contributors: viewModel.contributors, state: viewModel.state, configutation: configuration, loadNextPage: viewModel.loadNextPageIfReachToBottom)
         case .grid:
             EmptyView()
         }

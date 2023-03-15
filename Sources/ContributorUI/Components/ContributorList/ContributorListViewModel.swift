@@ -14,12 +14,16 @@ class ContributorListViewModel: ObservableObject {
     @Published var contributors: Contributors = []
     @Published var state: ListContainerState = .idle
 
+    var page: Int = 1
+    var lastId: Int?
+
     init(github: GitHub) {
         self.github = github
     }
 
     func loadContributors(with configuration: ContributorList.Configuration) async {
         do {
+            guard self.state == .idle else { return }
             await MainActor.run {
                 self.error = nil
                 self.state = .loading
@@ -30,11 +34,17 @@ class ContributorListViewModel: ObservableObject {
                     owner: configuration.owner,
                     repo: configuration.repo
                 ),
-                parameters: [:]
+                parameters: [
+                    "anon":"\(configuration.includesAnonymous)",
+                    "per_page":"50",
+                    "page":"\(page)"
+                ]
             )
+            self.page += 1
+            self.lastId = contributors.last?.id
             await MainActor.run {
+                self.contributors.append(contentsOf: contributors)
                 self.state = contributors.isEmpty ? .end : .idle
-                self.contributors = contributors
             }
         } catch {
             await MainActor.run {
@@ -42,5 +52,11 @@ class ContributorListViewModel: ObservableObject {
                 self.state = .idle
             }
         }
+    }
+
+    func loadNextPageIfReachToBottom(_ contributor: Contributor, with configuration: ContributorList.Configuration) async {
+        guard state == .idle else { return }
+        guard contributor.id == lastId else { return }
+        await loadContributors(with: configuration)
     }
 }

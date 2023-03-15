@@ -13,6 +13,7 @@ struct TableListContainer: View, ListContainer {
     var contributors: Contributors
     var state: ListContainerState
     var configutation: ContributorList.Configuration
+    var loadNextPage: (Contributor, ContributorList.Configuration) async -> Void
 
     @ScaledMetric var size: CGFloat = 50
 
@@ -24,19 +25,17 @@ struct TableListContainer: View, ListContainer {
         List {
             ForEach(contributors) { element in
                 cell(element)
+                    .task {
+                        await loadNextPage(element, configutation)
+                    }
             }
             switch state {
-            case .idle:
-                EmptyView()
             case .loading:
-                if contributors.isEmpty {
-                    ForEach(0..<4, id: \.self) { index in
-                        placeholder()
-                    }
-                } else {
+                let count = contributors.isEmpty ? 4 : 3
+                ForEach(0..<count, id: \.self) { index in
                     placeholder()
                 }
-            case .end:
+            case .idle, .end:
                 EmptyView()
             }
         }

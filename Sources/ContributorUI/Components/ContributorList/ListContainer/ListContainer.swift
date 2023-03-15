@@ -16,6 +16,7 @@ protocol ListContainer {
     var contributors: Contributors { get set }
     var state: ListContainerState { get set }
     var configutation: ContributorList.Configuration { get set }
+    var loadNextPage: (Contributor, ContributorList.Configuration) async -> Void { get set }
 
     var container: Container { get }
     func cell(_ contributor: Contributor) -> Cell
