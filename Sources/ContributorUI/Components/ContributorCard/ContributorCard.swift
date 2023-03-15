@@ -62,7 +62,10 @@ public struct ContributorCard: View {
         let minimumHeight: CGFloat = size * CGFloat(configuration.minimumCardRowCount) + configuration.spacing * CGFloat(configuration.minimumCardRowCount - 1)
         
         if viewModel.contributors.isEmpty, let error = viewModel.error {
-            errorPrompt(error)
+            ErrorPrompt(error: error) {
+                await viewModel.loadContributors(with: configuration)
+            }
+            .frame(minHeight: minimumHeight)
         } else {
             LazyVGrid(columns: columns, spacing: configuration.spacing) {
                 ForEach(viewModel.contributors) { contributor in
@@ -106,29 +109,6 @@ public struct ContributorCard: View {
                     labelHeight = size.height
                 }
                 .position(x: location.x, y: location.y - labelHeight / 2 - 8)
-        }
-    }
-
-    @ViewBuilder
-    func errorPrompt(_ error: APIError) -> some View {
-        VStack(spacing: 5) {
-            if let title = error.errorDescription, let message = error.recoverySuggestion {
-                Text(title)
-                    .font(.headline)
-                Text(message)
-                    .font(.subheadline)
-                    .multilineTextAlignment(.center)
-            }
-            if error == .unknownError {
-                Button {
-                    Task {
-                        await viewModel.loadContributors(with: configuration)
-                    }
-                } label: {
-                    Label("Retry", systemImage: "arrow.clockwise")
-                }
-                .font(.callout)
-            }
         }
     }
 }

@@ -20,7 +20,7 @@ public struct ContributorList: View {
 
     public var body: some View {
         NavigationStack {
-            container
+            contentView
                 .navigationTitle(configuration.navigationTitle)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -33,6 +33,18 @@ public struct ContributorList: View {
         }
         .task {
             await viewModel.loadContributors(with: configuration)
+        }
+    }
+
+    @ViewBuilder
+    var contentView: some View {
+        if viewModel.contributors.isEmpty, let error = viewModel.error {
+            ErrorPrompt(error: error) {
+                await viewModel.loadContributors(with: configuration)
+            }
+            .padding(20)
+        } else {
+            container
         }
     }
 
