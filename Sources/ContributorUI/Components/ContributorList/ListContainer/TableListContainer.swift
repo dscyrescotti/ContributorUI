@@ -85,13 +85,13 @@ struct TableListContainer: View, ListContainer {
                     .foregroundColor(.gray.opacity(0.4))
                     .frame(width: 150, height: size * 0.3)
                     .shimmering()
-                    .cornerRadius(5)
+                    .clipShape(Capsule())
                 Rectangle()
                     .foregroundColor(.gray.opacity(0.4))
                     .frame(width: 60, height: size * 0.2)
                     .shimmering()
                     .fixedSize()
-                    .cornerRadius(5)
+                    .clipShape(Capsule())
             }
             .fixedSize()
         }

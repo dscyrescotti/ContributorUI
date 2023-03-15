@@ -17,6 +17,15 @@
         "revision" : "4effbd9143ab797eb60d2f32d4265c844c980946",
         "version" : "0.9.5"
       }
+    },
+    {
+      "identity" : "wormholy",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ipavlidakis/Wormholy.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "fa6cba3377498701c67720d4911d33b36a5d0bab"
+      }
     }
   ],
   "version" : 2
