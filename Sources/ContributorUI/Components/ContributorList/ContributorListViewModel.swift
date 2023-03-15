@@ -55,7 +55,6 @@ class ContributorListViewModel: ObservableObject {
     }
 
     func loadNextPageIfReachToBottom(_ contributor: Contributor, with configuration: ContributorList.Configuration) async {
-        guard state == .idle else { return }
         guard contributor.id == lastId else { return }
         await loadContributors(with: configuration)
     }
