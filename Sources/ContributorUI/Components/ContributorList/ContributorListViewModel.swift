@@ -44,7 +44,7 @@ class ContributorListViewModel: ObservableObject {
             self.lastId = contributors.last?.id
             await MainActor.run {
                 self.contributors.append(contentsOf: contributors)
-                self.state = contributors.isEmpty ? .end : .idle
+                self.state = contributors.count < 50 ? .end : .idle
             }
         } catch {
             await MainActor.run {

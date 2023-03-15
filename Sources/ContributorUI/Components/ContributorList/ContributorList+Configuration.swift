@@ -12,6 +12,7 @@ extension ContributorList {
         let repo: String
         let owner: String
         var title: String?
+        var hidesRepoLink: Bool
         var includesAnonymous: Bool
         var avatarStyle: AvatarStyle
         var listAppearance: ContributorListStyle
@@ -20,6 +21,7 @@ extension ContributorList {
             repo: String,
             owner: String,
             title: String? = nil,
+            hidesRepoLink: Bool = false,
             includesAnonymous: Bool = false,
             avatarStyle: AvatarStyle = .circle,
             listAppearance: ContributorListStyle = .table
@@ -28,6 +30,7 @@ extension ContributorList {
             self.owner = owner
             self.title = title
             self.avatarStyle = avatarStyle
+            self.hidesRepoLink = hidesRepoLink
             self.listAppearance = listAppearance
             self.includesAnonymous = includesAnonymous
         }
