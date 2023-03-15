@@ -31,9 +31,18 @@ struct TableListContainer: View, ListContainer {
             }
             switch state {
             case .loading:
-                let count = contributors.isEmpty ? 4 : 3
-                ForEach(0..<count, id: \.self) { index in
-                    placeholder()
+                VStack(alignment: .leading) {
+                    let count = contributors.isEmpty ? 4 : 3
+                    ForEach(0..<count, id: \.self) { index in
+                        if index != 0 {
+                            Divider()
+                                .padding(.leading, size + 10)
+                        }
+                        placeholder()
+                    }
+                }
+                .alignmentGuide(.listRowSeparatorLeading) { viewDimensions in
+                    return viewDimensions[.listRowSeparatorLeading] + size + 10
                 }
             case .idle, .end:
                 EmptyView()
@@ -76,16 +85,15 @@ struct TableListContainer: View, ListContainer {
                     .foregroundColor(.gray.opacity(0.4))
                     .frame(width: 150, height: size * 0.3)
                     .shimmering()
+                    .cornerRadius(5)
                 Rectangle()
                     .foregroundColor(.gray.opacity(0.4))
                     .frame(width: 60, height: size * 0.2)
                     .shimmering()
                     .fixedSize()
+                    .cornerRadius(5)
             }
             .fixedSize()
-        }
-        .alignmentGuide(.listRowSeparatorLeading) { viewDimensions in
-            return viewDimensions[.listRowSeparatorLeading] + size + 10
         }
     }
 }
