@@ -23,10 +23,10 @@ struct TableListContainer: View, ListContainer {
 
     var container: some View {
         List {
-            ForEach(contributors) { element in
-                cell(element)
+            ForEach(contributors) { contributor in
+                cell(contributor)
                     .task {
-                        await loadNextPage(element, configutation)
+                        await loadNextPage(contributor, configutation)
                     }
             }
             switch state {
@@ -81,12 +81,12 @@ struct TableListContainer: View, ListContainer {
                 .clipShape(configutation.avatarStyle.shape())
                 .fixedSize()
             VStack(alignment: .leading, spacing: 5) {
-                Rectangle()
+                Capsule()
                     .foregroundColor(.gray.opacity(0.4))
                     .frame(width: 150, height: size * 0.3)
                     .shimmering()
                     .clipShape(Capsule())
-                Rectangle()
+                Capsule()
                     .foregroundColor(.gray.opacity(0.4))
                     .frame(width: 60, height: size * 0.2)
                     .shimmering()
