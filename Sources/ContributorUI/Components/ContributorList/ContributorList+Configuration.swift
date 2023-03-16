@@ -15,7 +15,7 @@ extension ContributorList {
         var showsCommits: Bool
         var hidesRepoLink: Bool
         var avatarStyle: AvatarStyle
-        var listAppearance: ContributorListStyle
+        var listStyle: ContributorListStyle
 
         init(
             repo: String,
@@ -24,15 +24,15 @@ extension ContributorList {
             showsCommits: Bool = false,
             hidesRepoLink: Bool = false,
             avatarStyle: AvatarStyle = .circle,
-            listAppearance: ContributorListStyle = .table
+            listStyle: ContributorListStyle = .table
         ) {
             self.repo = repo
             self.owner = owner
             self.title = title
+            self.listStyle = listStyle
             self.avatarStyle = avatarStyle
             self.showsCommits = showsCommits
             self.hidesRepoLink = hidesRepoLink
-            self.listAppearance = listAppearance
         }
 
         var navigationTitle: String {

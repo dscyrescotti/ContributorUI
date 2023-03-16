@@ -32,6 +32,8 @@ struct ContentView: View {
         .padding()
         .fullScreenCover(isPresented: $isPresent) {
             ContributorList(owner: "apple", repo: "swift")
+                .contributorListStyle(.grid)
+                .showsCommits(true)
         }
     }
 }
