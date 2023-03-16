@@ -29,7 +29,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ContributorUITests",
-            dependencies: ["ContributorUI", "ViewInspector"],
+            dependencies: ["ContributorUI", "ViewInspector", "Kingfisher"],
             resources: [
                 .process("Resources")
             ]

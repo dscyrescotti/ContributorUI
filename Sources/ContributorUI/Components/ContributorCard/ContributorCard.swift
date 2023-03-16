@@ -56,7 +56,7 @@ public struct ContributorCard: View {
 
     @ViewBuilder
     var contentView: some View {
-        let countPerRow = Int(width / 38)
+        let countPerRow = Int(width / configuration.estimatedSize)
         let columns = [GridItem](repeating: GridItem(.flexible(), spacing: configuration.spacing), count: countPerRow)
         let size: CGFloat = max(0, (width - configuration.spacing * CGFloat(countPerRow - 1)) / CGFloat(max(countPerRow, 1)))
         let count = configuration.maximumDisplayCount - viewModel.contributors.count

@@ -7,6 +7,7 @@
 
 import XCTest
 import SwiftUI
+import Kingfisher
 import ViewInspector
 @testable import ContributorUI
 
@@ -63,9 +64,8 @@ class ContributorCardTests: XCTestCase {
         let configuration = sut.configuration
         XCTAssertEqual(configuration.padding, 10)
         XCTAssertEqual(configuration.spacing, 8)
-        XCTAssertEqual(configuration.countPerRow, 8)
+        XCTAssertEqual(configuration.estimatedSize, 40)
         XCTAssertEqual(configuration.cornerRadius, 15)
-        XCTAssertEqual(configuration.includesAnonymous, false)
         XCTAssertEqual(configuration.avatarStyle, .circle)
         XCTAssertEqual(configuration.borderStyle, .borderless)
         XCTAssertEqual(configuration.maximumDisplayCount, 30)
@@ -79,8 +79,7 @@ class ContributorCardTests: XCTestCase {
             .spacing(10)
             .backgroundStyle(.red)
             .cornerRadius(20)
-            .countPerRow(6)
-            .includesAnonymous(true)
+            .estimatedSize(100)
             .avatarStyle(.roundedRectangle(cornerRadius: 10))
             .borderStyle(.bordered(color: .blue, lineWidth: 5))
             .maximumDisplayCount(50)
@@ -91,9 +90,8 @@ class ContributorCardTests: XCTestCase {
             let configuration = card.configuration
             XCTAssertEqual(configuration.padding, 20)
             XCTAssertEqual(configuration.spacing, 10)
-            XCTAssertEqual(configuration.countPerRow, 6)
+            XCTAssertEqual(configuration.estimatedSize, 100)
             XCTAssertEqual(configuration.cornerRadius, 20)
-            XCTAssertEqual(configuration.includesAnonymous, true)
             XCTAssertEqual(configuration.avatarStyle, .roundedRectangle(cornerRadius: 10))
             XCTAssertEqual(configuration.borderStyle, .bordered(color: .blue, lineWidth: 5))
             XCTAssertEqual(configuration.maximumDisplayCount, 50)
@@ -112,21 +110,21 @@ class ContributorCardTests: XCTestCase {
             .spacing(10)
             .backgroundStyle(.red)
             .cornerRadius(20)
-            .countPerRow(6)
-            .includesAnonymous(true)
+            .estimatedSize(100)
             .avatarStyle(.rectangle)
             .borderStyle(.bordered(color: .blue, lineWidth: 5))
             .maximumDisplayCount(50)
             .minimumCardRowCount(4)
             .labelStyle(.custom(font: .headline, color: .brown, backgroundStyle: .white))
         let exp = sut.inspection.inspect(after: 1) { view in
-            let size: CGFloat = (960 - 10 * 5) / 6
+            let count = Int(960 / 100)
+            let size: CGFloat = (960 - 10 * CGFloat(count - 1)) / CGFloat(count)
             let minimumHeight: CGFloat = size * 4 + 10 * 3
             
             let lazyVGrid = try view.lazyVGrid()
             let columns = try lazyVGrid.columns()
             let column = columns[1]
-            XCTAssertEqual(columns.count, 6)
+            XCTAssertEqual(columns.count, count)
             XCTAssertEqual(column.size, .flexible())
             XCTAssertEqual(column.spacing, 10)
             XCTAssertEqual(try lazyVGrid.spacing(), 10)
@@ -149,8 +147,8 @@ class ContributorCardTests: XCTestCase {
             let forEach = try lazyVGrid.forEach(0)
             XCTAssertEqual(forEach.count, 10)
             
-            let asyncImage = try forEach.asyncImage(0)
-            let fixedFrame = try asyncImage.fixedFrame()
+            let kfImage = try forEach.view(KFImage.self, 0)
+            let fixedFrame = try kfImage.fixedFrame()
             XCTAssertEqual(floor(fixedFrame.width), floor(size))
             XCTAssertEqual(floor(fixedFrame.height), floor(size))
         }
@@ -164,8 +162,7 @@ class ContributorCardTests: XCTestCase {
             .spacing(10)
             .backgroundStyle(.red)
             .cornerRadius(20)
-            .countPerRow(6)
-            .includesAnonymous(true)
+            .estimatedSize(100)
             .avatarStyle(.rectangle)
             .borderStyle(.bordered(color: .blue, lineWidth: 5))
             .maximumDisplayCount(50)
@@ -174,7 +171,7 @@ class ContributorCardTests: XCTestCase {
         let exp1 = sut.inspection.inspect(after: 1.5) { view in
             let card = try view.actualView()
             XCTAssertNil(card.selection)
-            let cell = try view.lazyVGrid().forEach(0).asyncImage(0)
+            let cell = try view.lazyVGrid().forEach(0).view(KFImage.self, 0)
             XCTAssertNoThrow(try cell.callOnTapGesture())
         }
         let exp2 = sut.inspection.inspect(after: 2) { view in
@@ -196,7 +193,7 @@ class ContributorCardTests: XCTestCase {
             XCTAssertEqual(padding.leading, 6)
             XCTAssertEqual(padding.trailing, 6)
 
-            let cell = try view.lazyVGrid().forEach(0).asyncImage(2)
+            let cell = try view.lazyVGrid().forEach(0).view(KFImage.self, 2)
             XCTAssertNoThrow(try cell.callOnTapGesture())
         }
         let exp3 = sut.inspection.inspect(after: 3) { view in
@@ -204,7 +201,7 @@ class ContributorCardTests: XCTestCase {
             XCTAssertNotNil(card.selection)
             XCTAssertEqual(card.selection, card.viewModel.contributors[2])
 
-            let cell = try view.lazyVGrid().forEach(0).asyncImage(2)
+            let cell = try view.lazyVGrid().forEach(0).view(KFImage.self, 2)
             XCTAssertNoThrow(try cell.callOnTapGesture())
         }
         let exp4 = sut.inspection.inspect(after: 3.5) { view in
@@ -218,7 +215,7 @@ class ContributorCardTests: XCTestCase {
     func testContributorCardErrorPrompt204() throws {
         let sut = ContributorCard(owner: "owner", repo: "repo", github: githubWithError(204))
         let exp = sut.inspection.inspect(after: 1) { view in
-            let vStack = try view.vStack()
+            let vStack = try view.view(ErrorPrompt.self, 0).vStack()
             XCTAssertNoThrow(try vStack.find(text: "Nothing Existed"))
             XCTAssertNoThrow(try vStack.find(text: "There is no resource or data existed on the repository. Please provide a valid repository."))
         }
@@ -229,7 +226,7 @@ class ContributorCardTests: XCTestCase {
     func testContributorCardErrorPromptUnknown() throws {
         let sut = ContributorCard(owner: "owner", repo: "repo", github: githubWithError(500))
         let exp1 = sut.inspection.inspect(after: 1) { view in
-            let vStack = try view.vStack()
+            let vStack = try view.view(ErrorPrompt.self, 0).vStack()
             XCTAssertNoThrow(try vStack.find(text: "Something Went Wrong"))
             XCTAssertNoThrow(try vStack.find(text: "Something did not work out as expected. Please try again."))
             let button = try vStack.find(button: "Retry")
@@ -247,4 +244,3 @@ class ContributorCardTests: XCTestCase {
         wait(for: [exp1, exp2], timeout: 3)
     }
 }
-
