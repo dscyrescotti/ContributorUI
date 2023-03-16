@@ -243,4 +243,37 @@ class ContributorCardTests: XCTestCase {
         ViewHosting.host(view: sut.frame(width: 1000, height: 1000))
         wait(for: [exp1, exp2], timeout: 3)
     }
+
+    func testContributorCardInit() throws {
+        let sut = ContributorCard(owner: "owner", repo: "repo")
+        let configuration = sut.configuration
+        XCTAssertEqual(configuration.padding, 10)
+        XCTAssertEqual(configuration.spacing, 8)
+        XCTAssertEqual(configuration.estimatedSize, 40)
+        XCTAssertEqual(configuration.cornerRadius, 15)
+        XCTAssertEqual(configuration.avatarStyle, .circle)
+        XCTAssertEqual(configuration.borderStyle, .borderless)
+        XCTAssertEqual(configuration.maximumDisplayCount, 30)
+        XCTAssertEqual(configuration.minimumCardRowCount, 3)
+        XCTAssertEqual(configuration.labelStyle, .default)
+    }
+
+    func testContributorCardConfigurationUpdate() throws {
+        let sut = CardViewWrapper(owner: "owner", repo: "repo", github: github)
+        let exp1 = sut.inspection.inspect(after: 0.5) { view in
+            let wrapper = try view.actualView()
+            XCTAssertEqual(wrapper.displayCount, 30)
+            let card = try view.view(ContributorCard.self, 0).actualView()
+            XCTAssertEqual(card.configuration.maximumDisplayCount, 30)
+            wrapper.displayCount = 28
+        }
+        let exp2 = sut.inspection.inspect(after: 1) { view in
+            let wrapper = try view.actualView()
+            XCTAssertEqual(wrapper.displayCount, 28)
+            let card = try view.view(ContributorCard.self, 0).actualView()
+            XCTAssertEqual(card.configuration.maximumDisplayCount, 28)
+        }
+        ViewHosting.host(view: sut.frame(width: 1000, height: 1000))
+        wait(for: [exp1, exp2], timeout: 2)
+    }
 }
