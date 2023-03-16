@@ -28,7 +28,6 @@ struct ContentView: View {
                 .backgroundStyle(.thinMaterial)
                 .countPerRow(8)
                 .maximumDisplayCount(28)
-                .includesAnonymous(false)
         }
         .padding()
         .fullScreenCover(isPresented: $isPresent) {

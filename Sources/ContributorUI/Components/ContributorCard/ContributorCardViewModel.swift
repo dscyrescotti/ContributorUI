@@ -31,7 +31,6 @@ class ContributorCardViewModel: ObservableObject {
                     repo: configuration.repo
                 ),
                 parameters: [
-                    "anon":"\(configuration.includesAnonymous)",
                     "per_page":"\(configuration.maximumDisplayCount)"
                 ]
             )

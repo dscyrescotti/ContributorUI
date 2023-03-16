@@ -15,6 +15,8 @@ struct GridListContainer: View, ListContainer {
     var configutation: ContributorList.Configuration
     var loadNextPage: (Contributor, ContributorList.Configuration) async -> Void
 
+    @ScaledMetric var size: CGFloat = 110
+
     var body: some View {
         container
     }
@@ -22,15 +24,16 @@ struct GridListContainer: View, ListContainer {
     @ViewBuilder
     var container: some View {
         GeometryReader { geometry in
-            let count = Int(geometry.size.width / 110)
+            let count = Int(geometry.size.width / size)
             let spacing: CGFloat = 10
             let columns = [GridItem](repeating: GridItem(.flexible(), spacing: spacing, alignment: .top), count: count)
             let size = (geometry.size.width - spacing * CGFloat(count + 1)) / CGFloat(count)
+            let factor: CGFloat = configutation.showsCommits ? 1.1 : 0.9
             ScrollView {
                 LazyVGrid(columns: columns, spacing: spacing) {
                     ForEach(contributors) { contributor in
                         cell(contributor)
-                            .frame(width: size, height: size * 1.2)
+                            .frame(width: size, height: size * factor)
                             .task {
                                 await loadNextPage(contributor, configutation)
                             }
@@ -40,7 +43,7 @@ struct GridListContainer: View, ListContainer {
                         let count = contributors.isEmpty ? 4 : 3
                         ForEach(0..<count, id: \.self) { index in
                             placeholder()
-                                .frame(width: size, height: size * 1.2)
+                                .frame(width: size, height: size * factor)
                         }
                     case .idle, .end:
                         EmptyView()
@@ -69,9 +72,11 @@ struct GridListContainer: View, ListContainer {
                     Text(contributor.login)
                         .font(.caption.bold())
                         .lineLimit(1)
-                    Text("\(contributor.contributions) commits")
-                        .font(.caption)
-                        .lineLimit(1)
+                    if configutation.showsCommits {
+                        Text("\(contributor.contributions) commits")
+                            .font(.caption2)
+                            .lineLimit(1)
+                    }
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -95,11 +100,13 @@ struct GridListContainer: View, ListContainer {
                         .frame(width: 80, height: size * 0.11)
                         .shimmering()
                         .clipShape(Capsule())
-                    Capsule()
-                        .foregroundColor(.gray.opacity(0.4))
-                        .frame(width: 60, height: size * 0.08)
-                        .shimmering()
-                        .clipShape(Capsule())
+                    if configutation.showsCommits {
+                        Capsule()
+                            .foregroundColor(.gray.opacity(0.4))
+                            .frame(width: 60, height: size * 0.08)
+                            .shimmering()
+                            .clipShape(Capsule())
+                    }
                 }
                 .fixedSize()
             }

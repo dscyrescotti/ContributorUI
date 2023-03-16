@@ -11,7 +11,7 @@ import Foundation
 extension ContributorCard {
     public struct Configuration: Equatable {
         public static func == (lhs: ContributorCard.Configuration, rhs: ContributorCard.Configuration) -> Bool {
-            return lhs.includesAnonymous == rhs.includesAnonymous && lhs.maximumDisplayCount == rhs.maximumDisplayCount
+            return lhs.maximumDisplayCount == rhs.maximumDisplayCount
         }
 
         let repo: String
@@ -21,7 +21,6 @@ extension ContributorCard {
         var countPerRow: Int
         var cornerRadius: CGFloat
         var labelStyle: LabelStyle
-        var includesAnonymous: Bool
         var avatarStyle: AvatarStyle
         var borderStyle: BorderStyle
         var maximumDisplayCount: Int
@@ -36,7 +35,6 @@ extension ContributorCard {
             countPerRow: Int = 8,
             cornerRadius: CGFloat = 15,
             labelStyle: LabelStyle = .default,
-            includesAnonymous: Bool = false,
             avatarStyle: AvatarStyle = .circle,
             borderStyle: BorderStyle = .borderless,
             maximumDisplayCount: Int = 30,
@@ -52,7 +50,6 @@ extension ContributorCard {
             self.borderStyle = borderStyle
             self.countPerRow = countPerRow
             self.cornerRadius = cornerRadius
-            self.includesAnonymous = includesAnonymous
             self.maximumDisplayCount = maximumDisplayCount
             self.minimumCardRowCount = minimumCardRowCount
             self.backgroundStyle = AnyShapeStyle(backgroundStyle)

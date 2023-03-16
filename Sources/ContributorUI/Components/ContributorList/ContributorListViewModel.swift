@@ -35,7 +35,6 @@ class ContributorListViewModel: ObservableObject {
                     repo: configuration.repo
                 ),
                 parameters: [
-                    "anon":"\(configuration.includesAnonymous)",
                     "per_page":"50",
                     "page":"\(page)"
                 ]

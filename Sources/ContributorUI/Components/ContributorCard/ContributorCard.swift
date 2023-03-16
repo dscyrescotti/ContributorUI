@@ -172,12 +172,6 @@ public extension ContributorCard {
         return ContributorCard(configuration: configuration, viewModel: self._viewModel)
     }
 
-    func includesAnonymous(_ value: Bool) -> ContributorCard {
-        var configuration = self.configuration
-        configuration.includesAnonymous = value
-        return ContributorCard(configuration: configuration, viewModel: self._viewModel)
-    }
-
     func labelStyle(_ style: LabelStyle) -> ContributorCard {
         var configuration = self.configuration
         configuration.labelStyle = style
