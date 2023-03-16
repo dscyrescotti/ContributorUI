@@ -22,13 +22,16 @@ let package = Package(
     targets: [
         .target(
             name: "ContributorUI",
-            dependencies: ["Kingfisher"]
+            dependencies: ["Kingfisher"],
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "ContributorUITests",
             dependencies: ["ContributorUI", "ViewInspector"],
             resources: [
-                .process("Resources"),
+                .process("Resources")
             ]
         ),
     ],

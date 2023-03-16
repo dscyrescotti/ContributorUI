@@ -32,8 +32,9 @@ public struct ContributorList: View {
                     if !configuration.hidesRepoLink {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Link(destination: URL(string: "https://github.com/\(configuration.owner)/\(configuration.repo)")!) {
-                                Image(systemName: "link")
+                                Image("github", bundle: .module)
                             }
+                            .tint(.primary)
                         }
                     }
                 }
