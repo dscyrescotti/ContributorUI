@@ -26,7 +26,7 @@ struct ContentView: View {
             ContributorCard(owner: "apple", repo: "swift")
                 .padding(20)
                 .backgroundStyle(.thinMaterial)
-                .countPerRow(8)
+                .estimatedSize(38)
                 .maximumDisplayCount(28)
         }
         .padding()

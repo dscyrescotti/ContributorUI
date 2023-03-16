@@ -56,8 +56,9 @@ public struct ContributorCard: View {
 
     @ViewBuilder
     var contentView: some View {
-        let columns = [GridItem](repeating: GridItem(.flexible(), spacing: configuration.spacing), count: configuration.countPerRow)
-        let size: CGFloat = max(0, (width - configuration.spacing * CGFloat(configuration.countPerRow - 1)) / CGFloat(configuration.countPerRow))
+        let countPerRow = Int(width / 38)
+        let columns = [GridItem](repeating: GridItem(.flexible(), spacing: configuration.spacing), count: countPerRow)
+        let size: CGFloat = max(0, (width - configuration.spacing * CGFloat(countPerRow - 1)) / CGFloat(max(countPerRow, 1)))
         let count = configuration.maximumDisplayCount - viewModel.contributors.count
         let minimumHeight: CGFloat = size * CGFloat(configuration.minimumCardRowCount) + configuration.spacing * CGFloat(configuration.minimumCardRowCount - 1)
         
@@ -90,7 +91,7 @@ public struct ContributorCard: View {
                     }
                 }
             }
-            .frame(minHeight: minimumHeight, alignment: .topLeading)
+            .frame(maxWidth: .infinity, minHeight: minimumHeight, alignment: .topLeading)
         }
     }
 
@@ -160,9 +161,9 @@ public extension ContributorCard {
         return ContributorCard(configuration: configuration, viewModel: self._viewModel)
     }
 
-    func countPerRow(_ count: Int) -> ContributorCard {
+    func estimatedSize(_ value: CGFloat) -> ContributorCard {
         var configuration = self.configuration
-        configuration.countPerRow = count
+        configuration.estimatedSize = value
         return ContributorCard(configuration: configuration, viewModel: self._viewModel)
     }
 

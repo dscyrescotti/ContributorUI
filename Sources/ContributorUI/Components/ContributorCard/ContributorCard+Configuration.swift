@@ -18,8 +18,8 @@ extension ContributorCard {
         let owner: String
         var padding: CGFloat
         var spacing: CGFloat
-        var countPerRow: Int
         var cornerRadius: CGFloat
+        var estimatedSize: CGFloat
         var labelStyle: LabelStyle
         var avatarStyle: AvatarStyle
         var borderStyle: BorderStyle
@@ -32,8 +32,8 @@ extension ContributorCard {
             owner: String,
             padding: CGFloat = 10,
             spacing: CGFloat = 8,
-            countPerRow: Int = 8,
             cornerRadius: CGFloat = 15,
+            estimatedSize: CGFloat = 40,
             labelStyle: LabelStyle = .default,
             avatarStyle: AvatarStyle = .circle,
             borderStyle: BorderStyle = .borderless,
@@ -48,8 +48,8 @@ extension ContributorCard {
             self.labelStyle = labelStyle
             self.avatarStyle = avatarStyle
             self.borderStyle = borderStyle
-            self.countPerRow = countPerRow
             self.cornerRadius = cornerRadius
+            self.estimatedSize = estimatedSize
             self.maximumDisplayCount = maximumDisplayCount
             self.minimumCardRowCount = minimumCardRowCount
             self.backgroundStyle = AnyShapeStyle(backgroundStyle)
