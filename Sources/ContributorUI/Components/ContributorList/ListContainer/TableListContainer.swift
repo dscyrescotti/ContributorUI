@@ -66,8 +66,10 @@ struct TableListContainer: View, ListContainer {
             VStack(alignment: .leading, spacing: 5) {
                 Text(contributor.login)
                     .font(.headline)
-                Text("\(contributor.contributions) commits")
-                    .font(.caption)
+                if configutation.showsCommits {
+                    Text("\(contributor.contributions) commits")
+                        .font(.caption)
+                }
             }
         }
     }
@@ -86,12 +88,14 @@ struct TableListContainer: View, ListContainer {
                     .frame(width: 150, height: size * 0.3)
                     .shimmering()
                     .clipShape(Capsule())
-                Capsule()
-                    .foregroundColor(.gray.opacity(0.4))
-                    .frame(width: 60, height: size * 0.2)
-                    .shimmering()
-                    .fixedSize()
-                    .clipShape(Capsule())
+                if configutation.showsCommits {
+                    Capsule()
+                        .foregroundColor(.gray.opacity(0.4))
+                        .frame(width: 60, height: size * 0.2)
+                        .shimmering()
+                        .fixedSize()
+                        .clipShape(Capsule())
+                }
             }
             .fixedSize()
         }
