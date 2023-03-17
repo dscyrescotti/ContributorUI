@@ -26,10 +26,11 @@ public struct ContributorList: View {
         NavigationStack {
             contentView
                 .navigationTitle(configuration.navigationTitle)
+                #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Cancel") {
+                        Button("Close") {
                             dismiss()
                         }
                     }
@@ -42,6 +43,42 @@ public struct ContributorList: View {
                         }
                     }
                 }
+                #else
+                .toolbar {
+                    ToolbarItem(placement: .destructiveAction) {
+                        Button("Close") {
+                            dismiss()
+                        }
+                        .onHover { isHovered in
+                            DispatchQueue.main.async {
+                                if (isHovered) {
+                                    NSCursor.pointingHand.push()
+                                } else {
+                                    NSCursor.pop()
+                                }
+                            }
+                        }
+                    }
+                    if !configuration.hidesRepoLink {
+                        ToolbarItem(placement: .primaryAction) {
+                            Link(destination: URL(string: "https://github.com/\(configuration.owner)/\(configuration.repo)")!) {
+                                Image("github", bundle: .module)
+                                    .foregroundColor(.primary)
+                            }
+                            .help("Visit the repository on GitHub")
+                            .onHover { isHovered in
+                                DispatchQueue.main.async {
+                                    if (isHovered) {
+                                        NSCursor.pointingHand.push()
+                                    } else {
+                                        NSCursor.pop()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                #endif
         }
         .task {
             await viewModel.loadContributors(with: configuration)

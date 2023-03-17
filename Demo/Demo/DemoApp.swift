@@ -19,6 +19,22 @@ struct DemoApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                #if os(macOS)
+                .frame(minWidth: 1100, minHeight: 750)
+                #endif
         }
+        #if os(macOS)
+        .windowStyle(DefaultWindowStyle())
+        .windowToolbarStyle(DefaultWindowToolbarStyle())
+        #endif
+        #if os(macOS)
+        WindowGroup(id: "contributors") {
+            ContributorList(owner: "apple", repo: "swift")
+                .contributorListStyle(.grid)
+                .frame(minWidth: 800, minHeight: 400)
+        }
+        .windowStyle(DefaultWindowStyle())
+        .windowToolbarStyle(DefaultWindowToolbarStyle())
+        #endif
     }
 }
