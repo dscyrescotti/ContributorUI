@@ -21,21 +21,22 @@ class ContributorListTests: XCTestCase {
 
     var github: GitHub {
         let githubAPI = GitHubAPI()
-        MockURLProtocol.requestHandler = { request in
-            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
-            let url = Bundle.module.url(forResource: "contributors", withExtension: "json")!
-            return (response, try Data(contentsOf: url))
-        }
         return Networking(on: githubAPI, session: session)
     }
 
-    func githubWithError(_ code: Int) -> GitHub {
-        let githubAPI = GitHubAPI()
+    func loadSwiftContributors(with file: String = "contributors") {
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            let url = Bundle.module.url(forResource: file, withExtension: "json")!
+            return (response, try Data(contentsOf: url))
+        }
+    }
+
+    func setUpErrorCode(with code: Int) {
         MockURLProtocol.requestHandler = { request in
             let response = HTTPURLResponse(url: request.url!, statusCode: code, httpVersion: nil, headerFields: nil)!
             return (response, Data())
         }
-        return Networking(on: githubAPI, session: session)
     }
 
     override class func setUp() {
@@ -44,14 +45,6 @@ class ContributorListTests: XCTestCase {
 
     override class func tearDown() {
         MockURLProtocol.requestHandler = nil
-    }
-
-    func loadSwiftContributors(at page: Int) {
-        MockURLProtocol.requestHandler = { request in
-            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
-            let url = Bundle.module.url(forResource: "contributors-swift-\(page)", withExtension: "json")!
-            return (response, try Data(contentsOf: url))
-        }
     }
 
     func testContributorListInit() throws {
@@ -82,6 +75,7 @@ class ContributorListTests: XCTestCase {
 
     func testContributorListLayoutWithContainer() throws {
         let sut = ContributorList(owner: "owner", repo: "repo", github: github)
+        loadSwiftContributors()
         let exp = sut.inspection.inspect(after: 1) { view in
             let navigationStack = try view.navigationStack()
             let container = try navigationStack.view(TableListContainer.self, 0)
@@ -95,7 +89,8 @@ class ContributorListTests: XCTestCase {
     }
 
     func testContributorListLayoutWithErrorPrompt() throws {
-        let sut = ContributorList(owner: "owner", repo: "repo", github: githubWithError(500))
+        let sut = ContributorList(owner: "owner", repo: "repo", github: github)
+        setUpErrorCode(with: 500)
         let exp = sut.inspection.inspect(after: 1) { view in
             let navigationStack = try view.navigationStack()
             let errorPrompt = try navigationStack.view(ErrorPrompt.self, 0)
@@ -112,6 +107,7 @@ class ContributorListTests: XCTestCase {
         let sut = ContributorList(owner: "owner", repo: "repo", github: github)
             .showsCommits(true)
             .hidesRepoLink(true)
+        loadSwiftContributors()
         let exp = sut.inspection.inspect(after: 1) { view in
             let sut = try view.actualView()
             let container = try view.navigationStack().view(TableListContainer.self, 0)
@@ -149,14 +145,14 @@ class ContributorListTests: XCTestCase {
     func testContributorListLayoutWithTableListContainerLoadMore() throws {
         let sut = ContributorList(owner: "owner", repo: "repo", github: github)
             .showsCommits(true)
-        loadSwiftContributors(at: 1)
+        loadSwiftContributors(with: "contributors-swift-1")
         let exp1 = sut.inspection.inspect(after: 1) { view in
             let sut = try view.actualView()
             let container = try view.navigationStack().view(TableListContainer.self, 0)
             let list = try container.list()
             let forEach = try list.forEach(0)
             XCTAssertEqual(forEach.count, 50)
-            self.loadSwiftContributors(at: 2)
+            self.loadSwiftContributors(with: "contributors-swift-2")
             let contributor = sut.viewModel.contributors.last!
             let configuration = sut.configuration
             Task {
@@ -177,6 +173,7 @@ class ContributorListTests: XCTestCase {
         let sut = ContributorList(owner: "owner", repo: "repo", github: github)
             .showsCommits(true)
             .contributorListStyle(.grid)
+        loadSwiftContributors()
         let exp = sut.inspection.inspect(after: 1) { view in
             let sut = try view.actualView()
             let container = try view.navigationStack().view(GridListContainer.self, 0)
@@ -214,7 +211,7 @@ class ContributorListTests: XCTestCase {
         let sut = ContributorList(owner: "owner", repo: "repo", github: github)
             .showsCommits(true)
             .contributorListStyle(.grid)
-        loadSwiftContributors(at: 1)
+        loadSwiftContributors(with: "contributors-swift-1")
         let exp1 = sut.inspection.inspect(after: 1) { view in
             let sut = try view.actualView()
             let container = try view.navigationStack().view(GridListContainer.self, 0)
@@ -222,7 +219,7 @@ class ContributorListTests: XCTestCase {
             let grid = try scrollView.lazyVGrid()
             let forEach = try grid.forEach(0)
             XCTAssertEqual(forEach.count, 50)
-            self.loadSwiftContributors(at: 2)
+            self.loadSwiftContributors(with: "contributors-swift-2")
             let contributor = sut.viewModel.contributors.last!
             let configuration = sut.configuration
             Task {
@@ -244,6 +241,7 @@ class ContributorListTests: XCTestCase {
         let viewModel = TestContributroListViewModel(github: github)
         let sut = ContributorList(configuration: ContributorList.Configuration(repo: "owner", owner: "repo"), viewModel: StateObject(wrappedValue: viewModel))
             .showsCommits(true)
+        loadSwiftContributors()
         let exp = sut.inspection.inspect(after: 1) { view in
             let container = try view.navigationStack().view(TableListContainer.self, 0)
             let list = try container.list()
@@ -279,6 +277,7 @@ class ContributorListTests: XCTestCase {
         let sut = ContributorList(configuration: ContributorList.Configuration(repo: "owner", owner: "repo"), viewModel: StateObject(wrappedValue: viewModel))
             .showsCommits(true)
             .contributorListStyle(.grid)
+        loadSwiftContributors()
         let exp = sut.inspection.inspect(after: 1) { view in
             let container = try view.navigationStack().view(GridListContainer.self, 0)
             let scrollView = try container.geometryReader().scrollView()
