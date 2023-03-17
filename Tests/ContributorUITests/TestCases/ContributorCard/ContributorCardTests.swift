@@ -21,21 +21,22 @@ class ContributorCardTests: XCTestCase {
 
     var github: GitHub {
         let githubAPI = GitHubAPI()
-        MockURLProtocol.requestHandler = { request in
-            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
-            let url = Bundle.module.url(forResource: "contributors", withExtension: "json")!
-            return (response, try Data(contentsOf: url))
-        }
         return Networking(on: githubAPI, session: session)
     }
-    
-    func githubWithError(_ code: Int) -> GitHub {
-        let githubAPI = GitHubAPI()
+
+    func loadSwiftContributors(with file: String = "contributors") {
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            let url = Bundle.module.url(forResource: file, withExtension: "json")!
+            return (response, try Data(contentsOf: url))
+        }
+    }
+
+    func setUpErrorCode(with code: Int) {
         MockURLProtocol.requestHandler = { request in
             let response = HTTPURLResponse(url: request.url!, statusCode: code, httpVersion: nil, headerFields: nil)!
             return (response, Data())
         }
-        return Networking(on: githubAPI, session: session)
     }
 
     override class func setUp() {
@@ -48,6 +49,7 @@ class ContributorCardTests: XCTestCase {
 
     func testContributorCardState() throws {
         let sut = ContributorCard(owner: "owner", repo: "repo", github: github)
+        loadSwiftContributors()
         let exp = sut.inspection.inspect(after: 1) { view in
             let card = try view.actualView()
             XCTAssertEqual(floor(card.width), 980)
@@ -60,6 +62,7 @@ class ContributorCardTests: XCTestCase {
     }
 
     func testContributorCardDefaultConfiguration() throws {
+        loadSwiftContributors()
         let sut = ContributorCard(owner: "owner", repo: "repo", github: github)
         let configuration = sut.configuration
         XCTAssertEqual(configuration.padding, 10)
@@ -74,6 +77,7 @@ class ContributorCardTests: XCTestCase {
     }
 
     func testContributorCardConfigurationModifiers() throws {
+        loadSwiftContributors()
         let sut = ContributorCard(owner: "owner", repo: "repo", github: github)
             .padding(20)
             .spacing(10)
@@ -105,6 +109,7 @@ class ContributorCardTests: XCTestCase {
     }
     
     func testContributorCardLayout() throws {
+        loadSwiftContributors()
         let sut = ContributorCard(owner: "owner", repo: "repo", github: github)
             .padding(20)
             .spacing(10)
@@ -157,6 +162,7 @@ class ContributorCardTests: XCTestCase {
     }
     
     func testContributorCardGesture() throws {
+        loadSwiftContributors()
         let sut = ContributorCard(owner: "owner", repo: "repo", github: github)
             .padding(20)
             .spacing(10)
@@ -213,7 +219,8 @@ class ContributorCardTests: XCTestCase {
     }
     
     func testContributorCardErrorPrompt204() throws {
-        let sut = ContributorCard(owner: "owner", repo: "repo", github: githubWithError(204))
+        let sut = ContributorCard(owner: "owner", repo: "repo", github: github)
+        setUpErrorCode(with: 204)
         let exp = sut.inspection.inspect(after: 1) { view in
             let vStack = try view.view(ErrorPrompt.self, 0).vStack()
             XCTAssertNoThrow(try vStack.find(text: "Nothing Existed"))
@@ -224,7 +231,8 @@ class ContributorCardTests: XCTestCase {
     }
     
     func testContributorCardErrorPromptUnknown() throws {
-        let sut = ContributorCard(owner: "owner", repo: "repo", github: githubWithError(500))
+        let sut = ContributorCard(owner: "owner", repo: "repo", github: github)
+        setUpErrorCode(with: 500)
         let exp1 = sut.inspection.inspect(after: 1) { view in
             let vStack = try view.view(ErrorPrompt.self, 0).vStack()
             XCTAssertNoThrow(try vStack.find(text: "Something Went Wrong"))
@@ -246,6 +254,7 @@ class ContributorCardTests: XCTestCase {
 
     func testContributorCardInit() throws {
         let sut = ContributorCard(owner: "owner", repo: "repo")
+        loadSwiftContributors()
         let configuration = sut.configuration
         XCTAssertEqual(configuration.padding, 10)
         XCTAssertEqual(configuration.spacing, 8)
@@ -260,6 +269,7 @@ class ContributorCardTests: XCTestCase {
 
     func testContributorCardConfigurationUpdate() throws {
         let sut = CardViewWrapper(owner: "owner", repo: "repo", github: github)
+        loadSwiftContributors()
         let exp1 = sut.inspection.inspect(after: 0.5) { view in
             let wrapper = try view.actualView()
             XCTAssertEqual(wrapper.displayCount, 30)
