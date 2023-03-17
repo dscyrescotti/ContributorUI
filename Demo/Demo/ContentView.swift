@@ -9,7 +9,11 @@ import SwiftUI
 import ContributorUI
 
 struct ContentView: View {
+    #if os(macOS)
+    @Environment(\.openWindow) var openWindow
+    #else
     @State var isPresent: Bool = false
+    #endif
     var body: some View {
         VStack {
             HStack {
@@ -17,7 +21,11 @@ struct ContentView: View {
                     .font(.headline)
                 Spacer()
                 Button {
+                    #if os(macOS)
+                    openWindow(id: "contributors")
+                    #else
                     isPresent.toggle()
+                    #endif
                 } label: {
                     Text("See More")
                 }
@@ -30,11 +38,13 @@ struct ContentView: View {
                 .maximumDisplayCount(28)
         }
         .padding()
+        #if os(iOS)
         .fullScreenCover(isPresented: $isPresent) {
             ContributorList(owner: "apple", repo: "swift")
                 .contributorListStyle(.grid)
                 .showsCommits(true)
         }
+        #endif
     }
 }
 

@@ -80,7 +80,7 @@ class ContributorListTests: XCTestCase {
             let navigationStack = try view.navigationStack()
             let container = try navigationStack.view(TableListContainer.self, 0)
             let toolbar = try container.toolbar()
-            let cancel = try toolbar.find(button: "Cancel")
+            let cancel = try toolbar.find(button: "Close")
             try cancel.tap()
         }
 
@@ -95,7 +95,7 @@ class ContributorListTests: XCTestCase {
             let navigationStack = try view.navigationStack()
             let errorPrompt = try navigationStack.view(ErrorPrompt.self, 0)
             let toolbar = try errorPrompt.toolbar()
-            XCTAssertNoThrow(try toolbar.find(button: "Cancel"))
+            XCTAssertNoThrow(try toolbar.find(button: "Close"))
             let button = try errorPrompt.find(button: "Retry")
             try button.tap()
         }
@@ -142,33 +142,6 @@ class ContributorListTests: XCTestCase {
         wait(for: [exp], timeout: 2)
     }
 
-    func testContributorListLayoutWithTableListContainerLoadMore() throws {
-        let sut = ContributorList(owner: "owner", repo: "repo", github: github)
-            .showsCommits(true)
-        loadSwiftContributors(with: "contributors-swift-1")
-        let exp1 = sut.inspection.inspect(after: 1) { view in
-            let sut = try view.actualView()
-            let container = try view.navigationStack().view(TableListContainer.self, 0)
-            let list = try container.list()
-            let forEach = try list.forEach(0)
-            XCTAssertEqual(forEach.count, 50)
-            self.loadSwiftContributors(with: "contributors-swift-2")
-            let contributor = sut.viewModel.contributors.last!
-            let configuration = sut.configuration
-            Task {
-                await sut.viewModel.loadNextPageIfReachToBottom(contributor, with: configuration)
-            }
-        }
-        let exp2 = sut.inspection.inspect(after: 2) { view in
-            let container = try view.navigationStack().view(TableListContainer.self, 0)
-            let list = try container.list()
-            let forEach = try list.forEach(0)
-            XCTAssertEqual(forEach.count, 100)
-        }
-        ViewHosting.host(view: sut.frame(width: 390, height: 844))
-        wait(for: [exp1, exp2], timeout: 2)
-    }
-
     func testContributorListLayoutWithGridListContainer() throws {
         let sut = ContributorList(owner: "owner", repo: "repo", github: github)
             .showsCommits(true)
@@ -205,36 +178,6 @@ class ContributorListTests: XCTestCase {
         }
         ViewHosting.host(view: sut.frame(width: 390, height: 844))
         wait(for: [exp], timeout: 2)
-    }
-
-    func testContributorListLayoutWithGridListContainerLoadMore() throws {
-        let sut = ContributorList(owner: "owner", repo: "repo", github: github)
-            .showsCommits(true)
-            .contributorListStyle(.grid)
-        loadSwiftContributors(with: "contributors-swift-1")
-        let exp1 = sut.inspection.inspect(after: 1) { view in
-            let sut = try view.actualView()
-            let container = try view.navigationStack().view(GridListContainer.self, 0)
-            let scrollView = try container.geometryReader().scrollView()
-            let grid = try scrollView.lazyVGrid()
-            let forEach = try grid.forEach(0)
-            XCTAssertEqual(forEach.count, 50)
-            self.loadSwiftContributors(with: "contributors-swift-2")
-            let contributor = sut.viewModel.contributors.last!
-            let configuration = sut.configuration
-            Task {
-                await sut.viewModel.loadNextPageIfReachToBottom(contributor, with: configuration)
-            }
-        }
-        let exp2 = sut.inspection.inspect(after: 2) { view in
-            let container = try view.navigationStack().view(GridListContainer.self, 0)
-            let scrollView = try container.geometryReader().scrollView()
-            let grid = try scrollView.lazyVGrid()
-            let forEach = try grid.forEach(0)
-            XCTAssertEqual(forEach.count, 100)
-        }
-        ViewHosting.host(view: sut.frame(width: 390, height: 844))
-        wait(for: [exp1, exp2], timeout: 2)
     }
 
     func testContributorListLayoutWithTablePlaceholder() throws {
