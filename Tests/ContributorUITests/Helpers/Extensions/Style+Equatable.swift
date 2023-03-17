@@ -38,7 +38,7 @@ extension BorderStyle: Equatable {
 }
 
 extension LabelStyle: Equatable {
-    public static func == (lhs: ContributorUI.LabelStyle, rhs: ContributorUI.LabelStyle) -> Bool {
+    public static func == (lhs: LabelStyle, rhs: LabelStyle) -> Bool {
         return lhs.font == rhs.font && lhs.color == rhs.color
     }
 }
