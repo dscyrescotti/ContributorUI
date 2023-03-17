@@ -16,18 +16,22 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/nalexn/ViewInspector.git", .upToNextMajor(from: "0.9.5"))
+        .package(url: "https://github.com/nalexn/ViewInspector.git", .upToNextMajor(from: "0.9.5")),
+        .package(url: "https://github.com/onevcat/Kingfisher.git", .upToNextMajor(from: "7.6.2"))
     ],
     targets: [
         .target(
             name: "ContributorUI",
-            dependencies: []
+            dependencies: ["Kingfisher"],
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "ContributorUITests",
-            dependencies: ["ContributorUI", "ViewInspector"],
+            dependencies: ["ContributorUI", "ViewInspector", "Kingfisher"],
             resources: [
-                .process("Resources"),
+                .process("Resources")
             ]
         ),
     ],

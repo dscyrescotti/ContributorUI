@@ -9,14 +9,32 @@ import SwiftUI
 import ContributorUI
 
 struct ContentView: View {
+    @State var isPresent: Bool = false
     var body: some View {
-        ContributorCard(owner: "apple", repo: "swift")
-            .padding(20)
-            .backgroundStyle(.thinMaterial)
-            .countPerRow(8)
-            .maximumDisplayCount(28)
-            .includesAnonymous(false)
-            .padding()
+        VStack {
+            HStack {
+                Text("apple/swift")
+                    .font(.headline)
+                Spacer()
+                Button {
+                    isPresent.toggle()
+                } label: {
+                    Text("See More")
+                }
+                .font(.subheadline)
+            }
+            ContributorCard(owner: "apple", repo: "swift")
+                .padding(20)
+                .backgroundStyle(.thinMaterial)
+                .estimatedSize(38)
+                .maximumDisplayCount(28)
+        }
+        .padding()
+        .fullScreenCover(isPresented: $isPresent) {
+            ContributorList(owner: "apple", repo: "swift")
+                .contributorListStyle(.grid)
+                .showsCommits(true)
+        }
     }
 }
 

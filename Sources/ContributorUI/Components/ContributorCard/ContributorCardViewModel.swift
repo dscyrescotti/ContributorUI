@@ -8,18 +8,14 @@
 import Foundation
 
 class ContributorCardViewModel: ObservableObject {
-    let repo: String
-    let owner: String
     let github: GitHub
 
     @Published var error: APIError?
     @Published var isLoading: Bool = false
     @Published var contributors: Contributors = []
 
-    init(dependency: Dependency) {
-        self.repo = dependency.repo
-        self.owner = dependency.owner
-        self.github = dependency.github
+    init(github: GitHub) {
+        self.github = github
     }
 
     func loadContributors(with configuration: ContributorCard.Configuration) async {
@@ -31,11 +27,10 @@ class ContributorCardViewModel: ObservableObject {
             let contributors = try await github.fetch(
                 Contributors.self,
                 from: .listRepositoryContributors(
-                    owner: owner,
-                    repo: repo
+                    owner: configuration.owner,
+                    repo: configuration.repo
                 ),
                 parameters: [
-                    "anon":"\(configuration.includesAnonymous)",
                     "per_page":"\(configuration.maximumDisplayCount)"
                 ]
             )
@@ -49,13 +44,5 @@ class ContributorCardViewModel: ObservableObject {
                 self.isLoading = false
             }
         }
-    }
-}
-
-extension ContributorCardViewModel {
-    struct Dependency {
-        let repo: String
-        let owner: String
-        let github: GitHub
     }
 }

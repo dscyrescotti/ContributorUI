@@ -12,6 +12,7 @@
 		EC85FC2429B9AEC000CDEDE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC85FC2329B9AEC000CDEDE6 /* Assets.xcassets */; };
 		EC85FC2829B9AEC000CDEDE6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC85FC2729B9AEC000CDEDE6 /* Preview Assets.xcassets */; };
 		EC85FC3229B9AF4600CDEDE6 /* ContributorUI in Frameworks */ = {isa = PBXBuildFile; productRef = EC85FC3129B9AF4600CDEDE6 /* ContributorUI */; };
+		ECFD8F8929C1F57900DC21D8 /* Wormholy in Frameworks */ = {isa = PBXBuildFile; productRef = ECFD8F8829C1F57900DC21D8 /* Wormholy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC85FC3229B9AF4600CDEDE6 /* ContributorUI in Frameworks */,
+				ECFD8F8929C1F57900DC21D8 /* Wormholy in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +109,7 @@
 			name = Demo;
 			packageProductDependencies = (
 				EC85FC3129B9AF4600CDEDE6 /* ContributorUI */,
+				ECFD8F8829C1F57900DC21D8 /* Wormholy */,
 			);
 			productName = Demo;
 			productReference = EC85FC1C29B9AEBD00CDEDE6 /* Demo.app */;
@@ -136,6 +139,9 @@
 				Base,
 			);
 			mainGroup = EC85FC1329B9AEBD00CDEDE6;
+			packageReferences = (
+				ECFD8F8729C1F57900DC21D8 /* XCRemoteSwiftPackageReference "Wormholy" */,
+			);
 			productRefGroup = EC85FC1D29B9AEBD00CDEDE6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -382,10 +388,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		ECFD8F8729C1F57900DC21D8 /* XCRemoteSwiftPackageReference "Wormholy" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ipavlidakis/Wormholy.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		EC85FC3129B9AF4600CDEDE6 /* ContributorUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ContributorUI;
+		};
+		ECFD8F8829C1F57900DC21D8 /* Wormholy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ECFD8F8729C1F57900DC21D8 /* XCRemoteSwiftPackageReference "Wormholy" */;
+			productName = Wormholy;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

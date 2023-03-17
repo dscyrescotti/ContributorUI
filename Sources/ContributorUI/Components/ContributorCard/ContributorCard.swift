@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 public struct ContributorCard: View {
     let configuration: Configuration
@@ -55,39 +56,42 @@ public struct ContributorCard: View {
 
     @ViewBuilder
     var contentView: some View {
-        let columns = [GridItem](repeating: GridItem(.flexible(), spacing: configuration.spacing), count: configuration.countPerRow)
-        let size: CGFloat = max(0, (width - configuration.spacing * CGFloat(configuration.countPerRow - 1)) / CGFloat(configuration.countPerRow))
+        let countPerRow = Int(width / configuration.estimatedSize)
+        let columns = [GridItem](repeating: GridItem(.flexible(), spacing: configuration.spacing), count: countPerRow)
+        let size: CGFloat = max(0, (width - configuration.spacing * CGFloat(countPerRow - 1)) / CGFloat(max(countPerRow, 1)))
         let count = configuration.maximumDisplayCount - viewModel.contributors.count
         let minimumHeight: CGFloat = size * CGFloat(configuration.minimumCardRowCount) + configuration.spacing * CGFloat(configuration.minimumCardRowCount - 1)
         
         if viewModel.contributors.isEmpty, let error = viewModel.error {
-            errorPrompt(error)
+            ErrorPrompt(error: error) {
+                await viewModel.loadContributors(with: configuration)
+            }
+            .frame(minHeight: minimumHeight)
         } else {
             LazyVGrid(columns: columns, spacing: configuration.spacing) {
                 ForEach(viewModel.contributors) { contributor in
-                    AsyncImage(url: contributor.imageURL) { image in
-                        image
-                            .resizable()
-                    } placeholder: {
-                        Rectangle()
-                            .foregroundColor(.secondary)
-                            .shimmering()
-                    }
-                    .hovering(selection: $selection, location: $location, contributor: contributor)
-                    .frame(width: size, height: size)
-                    .clipShape(configuration.avatarStyle.shape())
+                    KFImage(contributor.imageURL)
+                        .placeholder {
+                            Rectangle()
+                                .foregroundColor(.gray.opacity(0.4))
+                        }
+                        .resizable()
+                        .diskCacheExpiration(.days(1))
+                        .hovering(selection: $selection, location: $location, contributor: contributor)
+                        .frame(width: size, height: size)
+                        .clipShape(configuration.avatarStyle.shape())
                 }
                 if viewModel.isLoading, count > 0 {
                     ForEach(0..<count, id: \.self) { _ in
                         Rectangle()
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.gray.opacity(0.4))
                             .frame(width: size, height: size)
                             .shimmering()
                             .clipShape(configuration.avatarStyle.shape())
                     }
                 }
             }
-            .frame(minHeight: minimumHeight, alignment: .topLeading)
+            .frame(maxWidth: .infinity, minHeight: minimumHeight, alignment: .topLeading)
         }
     }
 
@@ -108,52 +112,19 @@ public struct ContributorCard: View {
                 .position(x: location.x, y: location.y - labelHeight / 2 - 8)
         }
     }
-
-    @ViewBuilder
-    func errorPrompt(_ error: APIError) -> some View {
-        VStack(spacing: 5) {
-            if let title = error.errorDescription, let message = error.recoverySuggestion {
-                Text(title)
-                    .font(.headline)
-                Text(message)
-                    .font(.subheadline)
-                    .multilineTextAlignment(.center)
-            }
-            if error == .unknownError {
-                Button {
-                    Task {
-                        await viewModel.loadContributors(with: configuration)
-                    }
-                } label: {
-                    Label("Retry", systemImage: "arrow.clockwise")
-                }
-                .font(.callout)
-            }
-        }
-    }
 }
 
 extension ContributorCard {
     public init(owner: String, repo: String) {
-        self.configuration = Configuration()
-        let dependency = ContributorCardViewModel.Dependency(
-            repo: repo,
-            owner: owner,
-            github: .live
-        )
-        let viewModel = ContributorCardViewModel(dependency: dependency)
+        self.configuration = Configuration(repo: repo, owner: owner)
+        let viewModel = ContributorCardViewModel(github: .live)
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
 
     #if canImport(XCTest)
     init(owner: String, repo: String, github: GitHub) {
-        self.configuration = Configuration()
-        let dependency = ContributorCardViewModel.Dependency(
-            repo: repo,
-            owner: owner,
-            github: github
-        )
-        let viewModel = ContributorCardViewModel(dependency: dependency)
+        self.configuration = Configuration(repo: repo, owner: owner)
+        let viewModel = ContributorCardViewModel(github: github)
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     #endif
@@ -190,21 +161,15 @@ public extension ContributorCard {
         return ContributorCard(configuration: configuration, viewModel: self._viewModel)
     }
 
-    func countPerRow(_ count: Int) -> ContributorCard {
+    func estimatedSize(_ value: CGFloat) -> ContributorCard {
         var configuration = self.configuration
-        configuration.countPerRow = count
+        configuration.estimatedSize = value
         return ContributorCard(configuration: configuration, viewModel: self._viewModel)
     }
 
     func maximumDisplayCount(_ count: Int) -> ContributorCard {
         var configuration = self.configuration
         configuration.maximumDisplayCount = count
-        return ContributorCard(configuration: configuration, viewModel: self._viewModel)
-    }
-
-    func includesAnonymous(_ value: Bool) -> ContributorCard {
-        var configuration = self.configuration
-        configuration.includesAnonymous = value
         return ContributorCard(configuration: configuration, viewModel: self._viewModel)
     }
 
