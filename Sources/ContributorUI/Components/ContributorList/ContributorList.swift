@@ -170,3 +170,9 @@ public extension ContributorList {
         return ContributorList(configuration: configuration, viewModel: self._viewModel)
     }
 }
+
+extension ContributorList {
+    func configure(with configuration: Configuration) -> ContributorList {
+        ContributorList(configuration: configuration, viewModel: self._viewModel)
+    }
+}

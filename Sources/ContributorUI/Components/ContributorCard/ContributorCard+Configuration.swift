@@ -16,16 +16,16 @@ extension ContributorCard {
 
         let repo: String
         let owner: String
-        var padding: CGFloat
-        var spacing: CGFloat
-        var cornerRadius: CGFloat
-        var estimatedSize: CGFloat
-        var labelStyle: LabelStyle
-        var avatarStyle: AvatarStyle
-        var borderStyle: BorderStyle
-        var maximumDisplayCount: Int
-        var minimumCardRowCount: Int
-        var backgroundStyle: AnyShapeStyle
+        public var padding: CGFloat
+        public var spacing: CGFloat
+        public var cornerRadius: CGFloat
+        public var estimatedSize: CGFloat
+        public var labelStyle: LabelStyle
+        public var avatarStyle: AvatarStyle
+        public var borderStyle: BorderStyle
+        public var maximumDisplayCount: Int
+        public var minimumCardRowCount: Int
+        public var backgroundStyle: AnyShapeStyle
 
         public init<S: ShapeStyle>(
             repo: String,

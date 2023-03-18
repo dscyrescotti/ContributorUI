@@ -11,11 +11,11 @@ extension ContributorList {
     public struct Configuration {
         let repo: String
         let owner: String
-        var title: String?
-        var showsCommits: Bool
-        var hidesRepoLink: Bool
-        var avatarStyle: AvatarStyle
-        var listStyle: ContributorListStyle
+        public var title: String?
+        public var showsCommits: Bool
+        public var hidesRepoLink: Bool
+        public var avatarStyle: AvatarStyle
+        public var listStyle: ContributorListStyle
 
         init(
             repo: String,

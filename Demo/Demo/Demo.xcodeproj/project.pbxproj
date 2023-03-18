@@ -23,7 +23,7 @@
 		EC85FC2329B9AEC000CDEDE6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EC85FC2529B9AEC000CDEDE6 /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
 		EC85FC2729B9AEC000CDEDE6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		EC85FC2F29B9AEE200CDEDE6 /* ContributorUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ContributorUI; path = ..; sourceTree = "<group>"; };
+		ECF465D529C5642B0051BFF3 /* ContributorUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ContributorUI; path = ../..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,7 +42,7 @@
 		EC85FC1329B9AEBD00CDEDE6 = {
 			isa = PBXGroup;
 			children = (
-				EC85FC2E29B9AEE200CDEDE6 /* Packages */,
+				ECF465D429C5642B0051BFF3 /* Packages */,
 				EC85FC1E29B9AEBD00CDEDE6 /* Demo */,
 				EC85FC1D29B9AEBD00CDEDE6 /* Products */,
 				EC85FC3029B9AF4600CDEDE6 /* Frameworks */,
@@ -78,19 +78,19 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		EC85FC2E29B9AEE200CDEDE6 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				EC85FC2F29B9AEE200CDEDE6 /* ContributorUI */,
-			);
-			name = Packages;
-			sourceTree = "<group>";
-		};
 		EC85FC3029B9AF4600CDEDE6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ECF465D429C5642B0051BFF3 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				ECF465D529C5642B0051BFF3 /* ContributorUI */,
+			);
+			name = Packages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

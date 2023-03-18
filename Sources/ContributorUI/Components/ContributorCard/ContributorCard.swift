@@ -191,3 +191,9 @@ public extension ContributorCard {
         return ContributorCard(configuration: configuration, viewModel: self._viewModel)
     }
 }
+
+extension ContributorCard {
+    func configure(with configuration: Configuration) -> ContributorCard {
+        ContributorCard(configuration: configuration, viewModel: self._viewModel)
+    }
+}
