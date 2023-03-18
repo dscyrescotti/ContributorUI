@@ -35,6 +35,14 @@ struct HoverModifier: ViewModifier {
                     selection = isHovering ? contributor : nil
                     location = CGPoint(x: x, y: y)
                 }
+                .background {
+                    Color.clear
+                        .onAppear {
+                            guard selection == contributor else { return }
+                            location = CGPoint(x: x, y: y)
+                        }
+                        .id("\(x)-\(y)")
+                }
         }
     }
 }

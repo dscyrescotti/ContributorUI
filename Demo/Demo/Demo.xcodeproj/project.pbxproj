@@ -12,16 +12,18 @@
 		EC85FC2429B9AEC000CDEDE6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC85FC2329B9AEC000CDEDE6 /* Assets.xcassets */; };
 		EC85FC2829B9AEC000CDEDE6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC85FC2729B9AEC000CDEDE6 /* Preview Assets.xcassets */; };
 		EC85FC3229B9AF4600CDEDE6 /* ContributorUI in Frameworks */ = {isa = PBXBuildFile; productRef = EC85FC3129B9AF4600CDEDE6 /* ContributorUI */; };
+		ECFD8F8929C1F57900DC21D8 /* Wormholy in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = ECFD8F8829C1F57900DC21D8 /* Wormholy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EC236ABE29C42BFD009DFFF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EC85FC1C29B9AEBD00CDEDE6 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC85FC1F29B9AEBD00CDEDE6 /* DemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoApp.swift; sourceTree = "<group>"; };
 		EC85FC2129B9AEBD00CDEDE6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EC85FC2329B9AEC000CDEDE6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EC85FC2529B9AEC000CDEDE6 /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
 		EC85FC2729B9AEC000CDEDE6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		EC85FC2F29B9AEE200CDEDE6 /* ContributorUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ContributorUI; path = ..; sourceTree = "<group>"; };
+		ECF465D529C5642B0051BFF3 /* ContributorUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ContributorUI; path = ../..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +32,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC85FC3229B9AF4600CDEDE6 /* ContributorUI in Frameworks */,
+				ECFD8F8929C1F57900DC21D8 /* Wormholy in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,7 +42,7 @@
 		EC85FC1329B9AEBD00CDEDE6 = {
 			isa = PBXGroup;
 			children = (
-				EC85FC2E29B9AEE200CDEDE6 /* Packages */,
+				ECF465D429C5642B0051BFF3 /* Packages */,
 				EC85FC1E29B9AEBD00CDEDE6 /* Demo */,
 				EC85FC1D29B9AEBD00CDEDE6 /* Products */,
 				EC85FC3029B9AF4600CDEDE6 /* Frameworks */,
@@ -57,6 +60,7 @@
 		EC85FC1E29B9AEBD00CDEDE6 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				EC236ABE29C42BFD009DFFF3 /* Info.plist */,
 				EC85FC1F29B9AEBD00CDEDE6 /* DemoApp.swift */,
 				EC85FC2129B9AEBD00CDEDE6 /* ContentView.swift */,
 				EC85FC2329B9AEC000CDEDE6 /* Assets.xcassets */,
@@ -74,19 +78,19 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		EC85FC2E29B9AEE200CDEDE6 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				EC85FC2F29B9AEE200CDEDE6 /* ContributorUI */,
-			);
-			name = Packages;
-			sourceTree = "<group>";
-		};
 		EC85FC3029B9AF4600CDEDE6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ECF465D429C5642B0051BFF3 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				ECF465D529C5642B0051BFF3 /* ContributorUI */,
+			);
+			name = Packages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -107,6 +111,7 @@
 			name = Demo;
 			packageProductDependencies = (
 				EC85FC3129B9AF4600CDEDE6 /* ContributorUI */,
+				ECFD8F8829C1F57900DC21D8 /* Wormholy */,
 			);
 			productName = Demo;
 			productReference = EC85FC1C29B9AEBD00CDEDE6 /* Demo.app */;
@@ -136,6 +141,9 @@
 				Base,
 			);
 			mainGroup = EC85FC1329B9AEBD00CDEDE6;
+			packageReferences = (
+				ECFD8F8729C1F57900DC21D8 /* XCRemoteSwiftPackageReference "Wormholy" */,
+			);
 			productRefGroup = EC85FC1D29B9AEBD00CDEDE6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -296,6 +304,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Demo/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -315,6 +324,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -334,6 +345,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Demo/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -353,6 +365,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -382,10 +396,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		ECFD8F8729C1F57900DC21D8 /* XCRemoteSwiftPackageReference "Wormholy" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ipavlidakis/Wormholy.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		EC85FC3129B9AF4600CDEDE6 /* ContributorUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ContributorUI;
+		};
+		ECFD8F8829C1F57900DC21D8 /* Wormholy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ECFD8F8729C1F57900DC21D8 /* XCRemoteSwiftPackageReference "Wormholy" */;
+			productName = Wormholy;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
