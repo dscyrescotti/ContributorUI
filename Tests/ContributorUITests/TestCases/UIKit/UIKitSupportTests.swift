@@ -46,8 +46,7 @@ class UIKitSupportTests: XCTestCase {
         let window = UIWindow(frame:  UIScreen.main.bounds)
         window.makeKeyAndVisible()
         window.rootViewController = vc
-        XCTAssertEqual(vc.view.subviews.count, 1)
-        let configuration = vc.configuration
+        let configuration = vc.rootView.configuration
         XCTAssertNil(configuration.title)
         XCTAssertEqual(configuration.avatarStyle, .rectangle)
         XCTAssertEqual(configuration.listStyle, .table)
