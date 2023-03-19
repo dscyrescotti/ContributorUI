@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Repository: Identifiable {
+struct Repository: Identifiable, Hashable, Codable {
     var id: String { title }
     let owner: String
     let repo: String

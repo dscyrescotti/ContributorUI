@@ -28,7 +28,7 @@ struct ContentView: View {
                             Spacer()
                             Button {
                                 #if os(macOS)
-                                openWindow(id: "contributors")
+                                openWindow(value: repository)
                                 #else
                                 self.repository = repository
                                 #endif
