@@ -28,10 +28,12 @@ struct DemoApp: App {
         .windowToolbarStyle(DefaultWindowToolbarStyle())
         #endif
         #if os(macOS)
-        WindowGroup(id: "contributors") {
-            ContributorList(owner: "apple", repo: "swift")
-                .contributorListStyle(.grid)
-                .frame(minWidth: 800, minHeight: 400)
+        WindowGroup("", for: Repository.self) { $repository in
+            if let repository {
+                ContributorList(owner: repository.owner, repo: repository.repo)
+                    .contributorListStyle(.grid)
+                    .frame(minWidth: 800, minHeight: 400)
+            }
         }
         .windowStyle(DefaultWindowStyle())
         .windowToolbarStyle(DefaultWindowToolbarStyle())
