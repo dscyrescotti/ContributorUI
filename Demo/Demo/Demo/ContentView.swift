@@ -12,35 +12,45 @@ struct ContentView: View {
     #if os(macOS)
     @Environment(\.openWindow) var openWindow
     #else
-    @State var isPresent: Bool = false
+    @State var repository: Repository?
     #endif
+
+    let repositories: [Repository] = .all
+
     var body: some View {
-        VStack {
-            HStack {
-                Text("apple/swift")
-                    .font(.headline)
-                Spacer()
-                Button {
-                    #if os(macOS)
-                    openWindow(id: "contributors")
-                    #else
-                    isPresent.toggle()
-                    #endif
-                } label: {
-                    Text("See More")
+        NavigationStack {
+            ScrollView {
+                ForEach(repositories) { repository in
+                    VStack {
+                        HStack {
+                            Text(repository.title)
+                                .font(.headline)
+                            Spacer()
+                            Button {
+                                #if os(macOS)
+                                openWindow(id: "contributors")
+                                #else
+                                self.repository = repository
+                                #endif
+                            } label: {
+                                Text("See More")
+                            }
+                            .font(.subheadline)
+                        }
+                        ContributorCard(owner: repository.owner, repo: repository.repo)
+                            .padding(20)
+                            .backgroundStyle(.thinMaterial)
+                            .estimatedSize(38)
+                            .minimumCardRowCount(1)
+                            .maximumDisplayCount(30)
+                    }
+                    .padding()
                 }
-                .font(.subheadline)
             }
-            ContributorCard(owner: "apple", repo: "swift")
-                .padding(20)
-                .backgroundStyle(.thinMaterial)
-                .estimatedSize(38)
-                .maximumDisplayCount(28)
         }
-        .padding()
         #if os(iOS)
-        .fullScreenCover(isPresented: $isPresent) {
-            ContributorList(owner: "apple", repo: "swift")
+        .sheet(item: $repository) { repository in
+            ContributorList(owner: repository.owner, repo: repository.repo)
                 .contributorListStyle(.grid)
                 .showsCommits(true)
         }
