@@ -90,7 +90,7 @@ Afterwards, Xcode will open the project and then you can hit ⌘+R to run the pr
 > For those using UIKit or AppKit, you can check out `Demo/Demo-UIKit` and `Demo/Demo-AppKit`.
 
 ## 🏆 Inspiration
-**ContributorUI** is inspried by [contrib.rocks](https://contrib.rocks/) and is developed to praise the contributors of the project in iOS applications with a minimal setup.
+**ContributorUI** is inspried by [contrib.rocks](https://contrib.rocks/) and is developed to praise the contributors of the project in iOS and macOS applications with a minimal setup.
 
 ## ✍️ Author
 Scotti | [@dscyrescotti](https://twitter.com/dscyrescotti) 
