@@ -85,8 +85,8 @@ public struct ContributorCard: View {
                     ForEach(0..<count, id: \.self) { _ in
                         Rectangle()
                             .foregroundColor(.gray.opacity(0.4))
-                            .frame(width: size, height: size)
                             .shimmering()
+                            .frame(width: size, height: size)
                             .clipShape(configuration.avatarStyle.shape())
                     }
                 }

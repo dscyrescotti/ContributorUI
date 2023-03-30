@@ -78,21 +78,21 @@ struct TableListContainer: View, ListContainer {
         HStack(spacing: 10) {
             Rectangle()
                 .foregroundColor(.gray.opacity(0.4))
-                .frame(width: size, height: size)
                 .shimmering()
+                .frame(width: size, height: size)
                 .clipShape(configutation.avatarStyle.shape())
                 .fixedSize()
             VStack(alignment: .leading, spacing: 5) {
                 Capsule()
                     .foregroundColor(.gray.opacity(0.4))
-                    .frame(width: 150, height: size * 0.3)
                     .shimmering()
+                    .frame(width: 150, height: size * 0.3)
                     .clipShape(Capsule())
                 if configutation.showsCommits {
                     Capsule()
                         .foregroundColor(.gray.opacity(0.4))
-                        .frame(width: 60, height: size * 0.2)
                         .shimmering()
+                        .frame(width: 60, height: size * 0.2)
                         .fixedSize()
                         .clipShape(Capsule())
                 }

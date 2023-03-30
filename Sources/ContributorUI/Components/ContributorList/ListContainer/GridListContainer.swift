@@ -90,21 +90,21 @@ struct GridListContainer: View, ListContainer {
             VStack(spacing: 10) {
                 Rectangle()
                     .foregroundColor(.gray.opacity(0.4))
-                    .frame(width: size, height: size)
                     .shimmering()
+                    .frame(width: size, height: size)
                     .clipShape(configutation.avatarStyle.shape())
                     .fixedSize()
                 VStack(spacing: 2) {
                     Capsule()
                         .foregroundColor(.gray.opacity(0.4))
-                        .frame(width: 80, height: size * 0.11)
                         .shimmering()
+                        .frame(width: 80, height: size * 0.11)
                         .clipShape(Capsule())
                     if configutation.showsCommits {
                         Capsule()
                             .foregroundColor(.gray.opacity(0.4))
-                            .frame(width: 60, height: size * 0.08)
                             .shimmering()
+                            .frame(width: 60, height: size * 0.08)
                             .clipShape(Capsule())
                     }
                 }
