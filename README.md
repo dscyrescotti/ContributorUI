@@ -74,8 +74,13 @@ ContributorList(owner: <owner>,repo: <repo>)
 Add it as a dependency within your Package.swift.
 ```
 dependencies: [
-    .package(url: "https://github.com/dscyrescotti/ContributorUI.git", from: "1.0.0")
+    .package(url: "https://github.com/dscyrescotti/ContributorUI.git", from: "1.0.1")
 ]
+```
+### 🎁 Using CocoaPods
+Add it inside your Podfile.
+```
+pod 'ContributorUI', '~> 1.0.1'
 ```
 
 ## 🔎 Exploration
