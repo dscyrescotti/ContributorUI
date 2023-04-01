@@ -74,8 +74,13 @@ ContributorList(owner: <owner>,repo: <repo>)
 Add it as a dependency within your Package.swift.
 ```
 dependencies: [
-    .package(url: "https://github.com/dscyrescotti/ContributorUI.git", from: "1.0.0")
+    .package(url: "https://github.com/dscyrescotti/ContributorUI.git", from: "1.0.1")
 ]
+```
+### 🎁 Using CocoaPods
+Add it inside your Podfile.
+```
+pod 'ContributorUI', '~> 1.0.1'
 ```
 
 ## 🔎 Exploration
@@ -93,11 +98,15 @@ Afterwards, Xcode will open the project and then you can hit ⌘+R to run the pr
 **ContributorUI** is inspried by [contrib.rocks](https://contrib.rocks/) and is developed to praise the contributors of the project in iOS and macOS applications with a minimal setup.
 
 ## ✍️ Author
-Scotti | [@dscyrescotti](https://twitter.com/dscyrescotti) 
+Dscyre Scotti | [@dscyrescotti](https://twitter.com/dscyrescotti) 
 
 <p>
 <a href="https://twitter.com/dscyrescotti">
 <img src="https://img.shields.io/twitter/follow/dscyrescotti.svg?style=social">
+</a>
+&nbsp;
+<a href="https://mastodon.social/@dscyrescotti">
+<img src="https://img.shields.io/mastodon/follow/109981804502597931?domain=https%3A%2F%2Fmastodon.social&style=social">
 </a>
 &nbsp;
 <a href="https://github.com/dscyrescotti">

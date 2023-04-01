@@ -28,7 +28,7 @@ public struct ContributorList: View {
                 .navigationTitle(configuration.navigationTitle)
                 #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
+                .toolbar(content: {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("Close") {
                             dismiss()
@@ -37,14 +37,14 @@ public struct ContributorList: View {
                     if !configuration.hidesRepoLink {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Link(destination: URL(string: "https://github.com/\(configuration.owner)/\(configuration.repo)")!) {
-                                Image("github", bundle: .module)
+                                Image("github", bundle: .contribtorUI)
                             }
                             .tint(.primary)
                         }
                     }
-                }
+                })
                 #else
-                .toolbar {
+                .toolbar(content: {
                     ToolbarItem(placement: .destructiveAction) {
                         Button("Close") {
                             dismiss()
@@ -62,7 +62,7 @@ public struct ContributorList: View {
                     if !configuration.hidesRepoLink {
                         ToolbarItem(placement: .primaryAction) {
                             Link(destination: URL(string: "https://github.com/\(configuration.owner)/\(configuration.repo)")!) {
-                                Image("github", bundle: .module)
+                                Image("github", bundle: .contribtorUI)
                                     .foregroundColor(.primary)
                             }
                             .help("Visit the repository on GitHub")
@@ -77,7 +77,7 @@ public struct ContributorList: View {
                             }
                         }
                     }
-                }
+                })
                 #endif
         }
         .task {
