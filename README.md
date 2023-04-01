@@ -118,6 +118,9 @@ Dscyre Scotti | [@dscyrescotti](https://twitter.com/dscyrescotti)
 
 **ContributorUI**  welcomes all developers to contribute if you have any idea to enhance and open an issue if you encounter any bug.
 
+## 📢 Discussions
+Please feel free to share your feedback or ideas on **ContributorUI** by visiting the [Discussion Page](https://github.com/dscyrescotti/ContributorUI/discussions) for the project. We are always eager to hear from users like you. Additionally, if you have used **ContributorUI** in your project, we would love to know more about your experience! Please share your projects using **ContributorUI** under [Projects Using ContributorUI](https://github.com/dscyrescotti/ContributorUI/discussions/categories/projects-using-contributorui) category so that we can compile a list of projects and add it on **README.md**. Thank you for your support!
+
 ## © License
 
 **ContributorUI** is available under the MIT license. See the  [LICENSE](https://github.com/dscyrescotti/ContributorUI/blob/main/LICENSE)  file for more info.
